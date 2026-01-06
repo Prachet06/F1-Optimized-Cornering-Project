@@ -1,4 +1,5 @@
 from pydualsense import pydualsense
+#TODO: Install the library properly
 
 # Create controller instance
 ds = pydualsense()
