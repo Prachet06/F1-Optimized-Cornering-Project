@@ -8,5 +8,7 @@ root
 │   ├── Product Nobtbook.ipynb
 │   └── auto_screenshot.py
 └── Data
-    └── session-1.json
+    ├── Image Data
+    └── Sector Time Data
+        └── Session-1.json
 ```
