@@ -11,7 +11,8 @@ root
 │   ├── Product Notebook.ipynb
 │   └── auto_screenshot.py
 └── Data
-    ├── image-data
-    ├── sector-time-data
-    └── readme-images
+│   ├── image-data
+│   ├── sector-time-data
+│   └── readme-images
+└── README.md
 ```
