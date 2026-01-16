@@ -12,6 +12,8 @@ import mss.tools
 #       image data is saved in a separate folder
 
 # TODO: Maybe add something to delete/ remove previous accidental screenshots
+
+# TODO: Add lap number to the screenshot name too.
  
 print('''
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⣶⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -32,25 +34,31 @@ print("Running...... (press SHARE to exit). Triangle toggles screenshotting. L2 
 ds = pydualsense()
 ds.init()
 
-count = 0
-
 was_L2_pressed = False
 was_triangle_pressed = False
 record_start = False
+
+# For keeping track of the lap number
+lap = 0
 
 try:
 
     while True:
         state = ds.state
 
-        # --- Triangle toggle (edge detection) ---
+        # Triangle toggle to enable or disable screenshots
         triangle_pressed = bool(state.triangle)
         if triangle_pressed and not was_triangle_pressed:
             record_start = not record_start
-            print("Screenshotting Enabled." if record_start else "Screenshotting Disabled.")
+            if record_start:
+                print("Screenshotting Enabled.")
+                lap += 1
+                count = 0 # For keeping track of the times the brakes were hit in each lap
+            else:
+                print("Screenshotting Disabled.")
         was_triangle_pressed = triangle_pressed
 
-        # --- L2 screenshot (edge detection) ---
+        # L2 screenshot
         l2_pressed = bool(state.L2)
         if record_start and l2_pressed and not was_L2_pressed:
             count += 1
@@ -60,7 +68,7 @@ try:
                 monitor = sct.monitors[1]
                 sct_img = sct.grab(monitor)
 
-                file_loc = f"../Data/Image Data/Brake hit #{count}.png"
+                file_loc = f"../Data/Image Data/Lap #{lap} Brake hit #{count}.png"
                 mss.tools.to_png(sct_img.rgb, sct_img.size, output=file_loc)
 
             print(f"Screenshot saved: {file_loc}")

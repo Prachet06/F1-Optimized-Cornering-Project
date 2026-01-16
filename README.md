@@ -1,5 +1,8 @@
 # F1-Optimized-Cornering-Project
 
+## Controller Button Guide
+![Controller Button Guide](Data/ReadMe Images/Button Guide.jpeg)
+
 ### Repository File Structure 
 
 ```bash
@@ -9,6 +12,7 @@ root
 │   └── auto_screenshot.py
 └── Data
     ├── Image Data
-    └── Sector Time Data
-        └── Session-1.json
+    ├── Sector Time Data
+    │   └── Session-1.json
+    └── ReadMe Images
 ```
