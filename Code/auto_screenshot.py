@@ -3,12 +3,10 @@ import time
 import mss
 import mss.tools
 
-# TODO: Add logic so that times you hit the brakes in sector 1 counts and nothing else does
-#       one way to enforce this would be having a button to mark to mark the end and start of ]
-#       sector one.
-
 # TODO: Ensure that the screenshots are not overwritten, maybe through the use of input each 
-#       time you run the program
+#       time you run the program. 
+#       OR 
+#       Write code to detect the most recent folder in the image data directory 
 
 # TODO: Improve screenshot saves based on the inputs idea from above, so that each session's 
 #       image data is saved in a separate folder
@@ -28,44 +26,52 @@ print('''
 ⠈⠻⠿⣿⣿⣿⣿⣿⠿⠀⣿⣿⣿⣿⡇⠀⢠⣶⣾⣿⣿⡿⠿⠟⠋⠉⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠿⢿⡇⠀⠸⠟⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀
 ''')
-print("Running...... (press SHARE to exit)")
+print("Running...... (press SHARE to exit). Triangle toggles screenshotting. L2 takes a screenshot. Share exits.")
 
 
 ds = pydualsense()
 ds.init()
 
 count = 0
-was_pressed = False
+
+was_L2_pressed = False
+was_triangle_pressed = False
+record_start = False
 
 try:
-    
 
     while True:
         state = ds.state
-        is_pressed = bool(state.L2)
 
-        if is_pressed and not was_pressed:
+        # --- Triangle toggle (edge detection) ---
+        triangle_pressed = bool(state.triangle)
+        if triangle_pressed and not was_triangle_pressed:
+            record_start = not record_start
+            print("Screenshotting Enabled." if record_start else "Screenshotting Disabled.")
+        was_triangle_pressed = triangle_pressed
+
+        # --- L2 screenshot (edge detection) ---
+        l2_pressed = bool(state.L2)
+        if record_start and l2_pressed and not was_L2_pressed:
             count += 1
             print(f"L2 press #{count}")
-            # Triggering and saving screenshots below
-            with mss.mss() as sct:
-                # Get information for the laptop screen (monitor 1 at index 1)
-                monitor = sct.monitors[1] 
-                # Grab the data
-                sct_img = sct.grab(monitor)
-                # Save the picture 
-                filename = f"Break hit #{count}.png"
-                file_loc = f"../Data/Image Data/Break hit #{count}.png"
-                mss.tools.to_png(sct_img.rgb, sct_img.size, output=file_loc)
-                print(f"Screenshot saved as: {filename}")
 
-        was_pressed = is_pressed
+            with mss.mss() as sct:
+                monitor = sct.monitors[1]
+                sct_img = sct.grab(monitor)
+
+                file_loc = f"../Data/Image Data/Brake hit #{count}.png"
+                mss.tools.to_png(sct_img.rgb, sct_img.size, output=file_loc)
+
+            print(f"Screenshot saved: {file_loc}")
+
+        was_L2_pressed = l2_pressed
 
         if state.share:
             print("Share pressed, exiting")
             break
 
         time.sleep(0.01)
+
 finally:
     ds.close()
-
