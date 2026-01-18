@@ -14,8 +14,17 @@ root
 ├── Code 
 │   ├── Product Notebook.ipynb
 │   └── auto_screenshot.py
-└── Data
+├── Data
 │   ├── image-data
+│   │   ├── session-1
+│   │   │   ├── brake 
+│   │   │   └── throttle
+│   │   ├── session-2
+│   │   │   ├── brake 
+│   │   │   └── throttle
+│   │   ...
+│   │   ...
+│   │   ...
 │   ├── sector-time-data
 │   └── readme-images
 ├── Shiny App

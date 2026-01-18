@@ -5,39 +5,56 @@ import time
 import mss
 import mss.tools
 
-# TODO: Ensure that the screenshots are not overwritten, maybe through the use of input each 
-#       time you run the program. 
-#       OR 
-#       Write code to detect the most recent folder in the image data directory 
-
-# TODO: Improve screenshot saves based on the inputs idea from above, so that each session's 
-#       image data is saved in a separate folder
-
 # TODO: Maybe add a status check at the end of each lap which tells you how many laps of data
 #       has been recorded so far along with other useful information
- 
+
+def create_session_dir(session_number):
+    os.mkdir(f"../Data/image-data/session-{session_number}")
+    os.mkdir(f"../Data/image-data/session-{session_number}/brake")
+    os.mkdir(f"../Data/image-data/session-{session_number}/throttle")
+
+# TODO: Maybe add colours to the logo here:
+
 print('''
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⣶⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⠿⣿⣷⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣷⡄⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⡿⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⣀⣤ ⣿⣿⣿⣿⡇⠀⠈⠉⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀
-⠀⢀⣠⣤⣶⣾⣿⣿⡿⠀⣿⣿⣿⣿⡇⠀⢰⣶⣿⣿⣿⠿⠿⢿⣶⣦⣤⡀
-⢰⣿⣿⣿⡿⠛⠉⢀⣀⠀⣿⣿⣿⣿⡇⠀⠘⠋⠉⠀⣀⣠⣴⣾⣿⣿⣿⠇
-⠈⠻⠿⣿⣿⣿⣿⣿⠿⠀⣿⣿⣿⣿⡇⠀⢠⣶⣾⣿⣿⡿⠿⠟⠋⠉⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠿⢿⡇⠀⠸⠟⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⣶⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   |
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⠿⣿⣷⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀   |    
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣷⡄⠀⠀⠀⠀⠀⠀   |    Press:
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀   |    - Triangle: Enable or disable screenshotting
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⡿⠀⠀⠀⠀⠀⠀   |    - L2: Take a screenshot when brakes are hit
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀   |    - R2: Take a screenshot when throttle is hit
+⠀⠀⠀⠀⠀⠀⠀⣀⣤ ⣿⣿⣿⣿⡇⠀⠈⠉⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀   |    - Dpad Up: Delete previous lap's data
+⠀⢀⣠⣤⣶⣾⣿⣿⡿⠀⣿⣿⣿⣿⡇⠀⢰⣶⣿⣿⣿⠿⠿⢿⣶⣦⣤⡀   |    - Share: Stop the program
+⢰⣿⣿⣿⡿⠛⠉⢀⣀⠀⣿⣿⣿⣿⡇⠀⠘⠋⠉⠀⣀⣠⣴⣾⣿⣿⣿⠇   |    Best of luck!
+⠈⠻⠿⣿⣿⣿⣿⣿⠿⠀⣿⣿⣿⣿⡇⠀⢠⣶⣾⣿⣿⡿⠿⠟⠋⠉⠀⠀   |
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠿⢿⡇⠀⠸⠟⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀   |
 
-Auto screenshot program now running...... 
-      
-Press:
-- Triangle: Enable or disable screenshotting 
-- L2: Take a screenshot when brakes are hit
-- R2: Take a screenshot when throttle is hit
-- Share: Stop the program
-''')
+Auto screenshot program now running......''')
 
+# To ensure that data is not overwritten, there must be some mechanism to ensure 
+# that the new data is being written in a new folder corresponding to the current
+# session. This code chunk below will dynamically do just that and create a new 
+# folder for each session everytime the program is run.
+
+session_list = os.listdir(path = "../Data/image-data")
+
+if session_list == []:
+    print("Beginning data recording session 1.")
+    new_session = 1
+    create_session_dir(new_session)
+
+else:
+    if len(session_list) == 1:
+        print("Beginning data recording session 2.")
+    else:
+        tracker = []
+        for session in session_list:
+            tracker.append(int(session[-1]))
+
+        tracker.sort()
+        new_session = tracker[-1] + 1
+        create_session_dir(new_session)
+        print(f"Beginning data recording session {new_session}.")
+        
 # Initialize Colorama 
 # (autoreset=True resets color after each print just to be safe)
 init(autoreset=True) 
@@ -63,6 +80,7 @@ try:
         # Triangle toggle to enable or disable screenshots
         triangle_pressed = bool(state.triangle)
         if triangle_pressed and not was_triangle_pressed:
+            deleted_already = False # So that the user does not accidentally delete the second most recent lap's data 
             record_start = not record_start
             if record_start:
                 lap += 1
@@ -115,7 +133,7 @@ try:
                 monitor = sct.monitors[1]
                 sct_img = sct.grab(monitor)
 
-                file_loc = f"../Data/image-data/brake/Lap_{lap}_Brake hit_{brake_count}.png"
+                file_loc = f"../Data/image-data/session-{new_session}/brake/Lap_{lap}_Brake hit_{brake_count}.png"
                 file_name = f"Lap_{lap}_Brake hit_{brake_count}.png"
                 mss.tools.to_png(sct_img.rgb, sct_img.size, output=file_loc)
 
@@ -133,7 +151,7 @@ try:
                 monitor = sct.monitors[1]
                 sct_img = sct.grab(monitor)
 
-                file_loc = f"../Data/image-data/throttle/Lap_{lap}_Throttle hit_{throttle_count}.png"
+                file_loc = f"../Data/image-data/session-{new_session}/throttle/Lap_{lap}_Throttle hit_{throttle_count}.png"
                 file_name = f"Lap_{lap}_Throttle hit_{throttle_count}.png"
                 mss.tools.to_png(sct_img.rgb, sct_img.size, output=file_loc)
 
@@ -149,23 +167,29 @@ try:
             if not(record_start): 
                 
                 try:
-                    if lap != 0:
+                    # So that the user does not accidentally delete the second most recent lap's data 
+                    if deleted_already:
+                        print("You have already deleted that lap's data.")
+
+                    elif lap != 0:
                         deleted_files = 0 
                         i = 0
 
                         while i < brake_count:
-                            file_to_remove = f"../Data/image-data/brake/Lap_{lap}_Brake hit_{i+1}.png"
+                            file_to_remove = f"../Data/image-data/session-{new_session}/brake/Lap_{lap}_Brake hit_{i+1}.png"
                             os.remove(file_to_remove)
                             deleted_files += 1 
                             i += 1
 
                         i = 0
                         while i < throttle_count:
-                            file_to_remove = f"../Data/image-data/throttle/Lap_{lap}_Throttle hit_{i+1}.png"
+                            file_to_remove = f"../Data/image-data/session-{new_session}/throttle/Lap_{lap}_Throttle hit_{i+1}.png"
                             os.remove(file_to_remove)
                             deleted_files += 1 
                             i += 1
                         
+                        lap = lap -1
+                        deleted_already = True
                         print(f"{deleted_files} Files deleted.\n")
                 
                     else:
@@ -180,10 +204,45 @@ try:
         was_DpadUp_pressed = dpadup_pressed
 
         if state.share:
-            print("Share pressed, exiting...")
+            print('''Share pressed, exiting...
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⣤⣔⠒⠀⠉⠉⠢⡀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⣀⣀⠠⠄⠒⠘⢿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠱⡀⠀⠀⠀⠀⠀⠀
+⢺⣦⢻⣿⣿⣿⣿⣄⠀⠀⠀⠀⠈⢿⡿⠿⠛⠛⠐⣶⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀
+⠈⢿⣧⢻⣿⣿⣿⣿⣆⣀⣠⣴⣶⣿⡄⠀⠀⠀⠀⠘⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀
+⠀⠀⢿⣧⢋⠉⠀⠀⠀⠹⣿⣿⣿⣿⣿⡆⣀⣤⣤⣶⣮⠀⠀⠀⠀⠣⠀⠀⠀⠀
+⠀⠀⠈⢿⣧⢂⠀⠀⠀⠀⢘⠟⠛⠉⠁⠀⠹⣿⣿⣿⣿⣷⡀⠀⠀⠀⢣⠀⠀⠀
+⠀⠀⠀⠈⢿⣧⢲⣶⣾⣿⣿⣧⡀⠀⠀⠀⢀⣹⠛⠋⠉⠉⠉⢿⣿⣿⣿⣧⠀⠀
+⠀⠀⠀⠀⠀⢿⣧⢻⣿⣿⣿⡿⠷⢤⣶⣿⣿⣿⣧⡀⠀⠀⠀⠈⢻⣿⣿⣿⣧⠀
+⠀⠀⠀⠀⠀⠈⢿⣧⢛⠉⠁⠀⠀⠀⢻⣿⣿⣿⡿⠗⠒⠒⠈⠉⠉⠉⠙⡉⠛⡃
+⠀⠀⠀⠀⠀⠀⠈⢿⣯⢂⠀⠀⠀⡀⠤⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠈⢿⣯⠐⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀''')
+            
+            # If no data is recorded in current session directory, delete it
+            no_brake_data = False
+            no_throttle_data = False
+
+            if os.listdir(path = f"../Data/image-data/session-{new_session}/brake") == []:
+                no_brake_data = True
+            if os.listdir(f"../Data/image-data/session-{new_session}/throttle") == []:
+                no_throttle_data = True
+            if no_brake_data and no_throttle_data:
+                print("No data was recorded in this session.")
+                os.rmdir(f"../Data/image-data/session-{new_session}/brake")
+                os.rmdir(f"../Data/image-data/session-{new_session}/throttle")
+                os.rmdir(f"../Data/image-data/session-{new_session}")
+            
             break
 
         time.sleep(0.01)
 
 finally:
     ds.close()
+
+ 
