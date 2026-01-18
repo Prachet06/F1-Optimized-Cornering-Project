@@ -1,4 +1,5 @@
 from pydualsense import pydualsense
+from colorama import init, Fore, Style
 import time
 import mss
 import mss.tools
@@ -13,7 +14,7 @@ import mss.tools
 
 # TODO: Maybe add something to delete/ remove previous accidental screenshots
 
-# TODO: Add lap number to the screenshot name too.
+# TODO: ADD SCREENSHOT MECHANISM FOR THROTTLE TOO
  
 print('''
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⣶⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -36,6 +37,8 @@ Press:
 - Share: Stop the program
 ''')
 
+# Initialize Colorama (autoreset=True resets color after each print)
+init(autoreset=True) 
 
 ds = pydualsense()
 ds.init()
@@ -59,9 +62,24 @@ try:
             if record_start:
                 lap += 1
                 print(f"Screenshotting Enabled | Lap: {lap}")
+                print(f"{Fore.GREEN}++++++++++++++++++++++++++")
+                print(f"{Fore.GREEN}++++++++++++++++++++++++++")
+                print(f"{Fore.GREEN}++++++++++++++++++++++++++")
+                print(f"{Fore.GREEN}++++++++++++++++++++++++++")
+                print(f"{Fore.GREEN}++++++++++++++++++++++++++")
+                print(f"{Fore.GREEN}++++++++++++++++++++++++++")
                 count = 0 # For keeping track of the times the brakes were hit in each lap
             else:
-                print("Screenshotting Disabled.\n")
+                # to avoid an unneccessary increase in lap number
+                if count == 0 and lap != 0:
+                    lap = lap - 1
+                print("Screenshotting Disabled.")
+                print(f"{Fore.RED}++++++++++++++++++++++++++")
+                print(f"{Fore.RED}++++++++++++++++++++++++++")
+                print(f"{Fore.RED}++++++++++++++++++++++++++")
+                print(f"{Fore.RED}++++++++++++++++++++++++++")
+                print(f"{Fore.RED}++++++++++++++++++++++++++")
+                print(f"{Fore.RED}++++++++++++++++++++++++++\n")
         was_triangle_pressed = triangle_pressed
 
         # L2 screenshot
@@ -74,7 +92,7 @@ try:
                 monitor = sct.monitors[1]
                 sct_img = sct.grab(monitor)
 
-                file_loc = f"../Data/image-data/Lap_{lap}_Brake hit_{count}.png"
+                file_loc = f"../Data/image-data/brake/Lap_{lap}_Brake hit_{count}.png"
                 file_name = f"Lap_{lap}_Brake hit_{count}.png"
                 mss.tools.to_png(sct_img.rgb, sct_img.size, output=file_loc)
 
