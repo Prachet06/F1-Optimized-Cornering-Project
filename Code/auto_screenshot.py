@@ -12,6 +12,9 @@ import mss.tools
 
 # TODO: Improve screenshot saves based on the inputs idea from above, so that each session's 
 #       image data is saved in a separate folder
+
+# TODO: Maybe add a status check at the end of each lap which tells you how many laps of data
+#       has been recorded so far along with other useful information
  
 print('''
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⣶⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
