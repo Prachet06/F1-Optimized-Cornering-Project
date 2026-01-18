@@ -1,5 +1,6 @@
 from pydualsense import pydualsense
 from colorama import init, Fore, Style
+import os
 import time
 import mss
 import mss.tools
@@ -11,9 +12,6 @@ import mss.tools
 
 # TODO: Improve screenshot saves based on the inputs idea from above, so that each session's 
 #       image data is saved in a separate folder
-
-# TODO: Maybe add something to delete/ remove previous accidental screenshots
-
  
 print('''
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⣶⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -31,7 +29,7 @@ print('''
 Auto screenshot program now running...... 
       
 Press:
-- Triangle: Enable or disbale screenshotting 
+- Triangle: Enable or disable screenshotting 
 - L2: Take a screenshot when brakes are hit
 - R2: Take a screenshot when throttle is hit
 - Share: Stop the program
@@ -44,9 +42,11 @@ init(autoreset=True)
 ds = pydualsense()
 ds.init()
 
+# booleans for buttons in use
 was_L2_pressed = False
 was_R2_pressed = False
 was_triangle_pressed = False
+was_DpadUp_pressed = False
 record_start = False
 
 # For keeping track of the lap number
@@ -137,6 +137,44 @@ try:
             print(f"    -Throttle position captured as: {file_name}")
 
         was_R2_pressed = r2_pressed
+       
+        # DpadUp to remove most recent lap's data
+        dpadup_pressed = bool(state.DpadUp)
+        if dpadup_pressed and not was_DpadUp_pressed:
+
+            # ensure that the lap is concluded before deleting its data.
+            if not(record_start): 
+                
+                try:
+                    if lap != 0:
+                        deleted_files = 0 
+                        i = 0
+
+                        while i < brake_count:
+                            file_to_remove = f"../Data/image-data/brake/Lap_{lap}_Brake hit_{i+1}.png"
+                            os.remove(file_to_remove)
+                            deleted_files += 1 
+                            i += 1
+
+                        i = 0
+                        while i < throttle_count:
+                            file_to_remove = f"../Data/image-data/throttle/Lap_{lap}_Throttle hit_{i+1}.png"
+                            os.remove(file_to_remove)
+                            deleted_files += 1 
+                            i += 1
+                        
+                        print(f"{deleted_files} Files deleted.\n")
+                
+                    else:
+                        print("No data recorded.")
+
+                except FileNotFoundError:
+                    print("There was no data recorded in the previous lap or it has been deleted.")
+            
+            else:
+                print("End lap by disabling screenshotting to delete its data.")
+
+        was_DpadUp_pressed = dpadup_pressed
 
         if state.share:
             print("Share pressed, exiting...")
@@ -146,4 +184,3 @@ try:
 
 finally:
     ds.close()
-    

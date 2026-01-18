@@ -5,6 +5,7 @@
 
 ## Controller Button Guide
 ![Controller Button Guide](Data/readme-images/button-guide.jpeg)
+**Note**: The auto-screenshotting program only works for the PS5 DualSense controller.
 
 ### Repository File Structure 
 
