@@ -1,1 +1,13 @@
-/* TODO: Use this file to give the shiny app a style like the official F1 Website.
+/* TODO: Use this file to give the shiny app a style like the official F1 Website.*/
+
+.bslib-page-title.navbar-brand{
+  color: #e10600
+}
+
+.navbar.navbar-static-top{
+  background-color: #15151e;
+}
+
+.main.bslib-gap-spacing.html-fill-container{
+  background-color: #000000;
+}
