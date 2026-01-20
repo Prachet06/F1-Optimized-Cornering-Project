@@ -1,5 +1,6 @@
 from pydualsense import pydualsense
 from colorama import init, Fore, Style
+from playsound3 import playsound
 import os
 import time
 import mss
@@ -83,6 +84,8 @@ try:
              
             record_start = not record_start
             if record_start:
+                
+                # TODO: Audio for start 
                 lap += 1
                 print(f"Screenshotting Enabled | Lap: {lap}")
                 print(f"{Fore.GREEN}++++++++++++++++++++++++      ++                    ++")
@@ -106,7 +109,7 @@ try:
                 # to avoid an unneccessary increase in lap number
                 if brake_count == 0 and lap != 0 and throttle_count == 0:
                     lap = lap - 1
-
+                # TODO: Audio for end 
                 print("\nScreenshotting Disabled.")
                 print(f"{Fore.RED}------------------------      ------------------------      ------------------------")
                 print(f"{Fore.RED}------------------------      ------------------------      ------------------------")
@@ -174,6 +177,7 @@ try:
                         print("You have already deleted that lap's data.")
 
                     elif lap != 0:
+
                         deleted_files = 0 
                         i = 0
 
@@ -192,6 +196,7 @@ try:
                         
                         lap = lap -1
                         deleted_already = True
+                        # TODO: Audio for file deletion 
                         print(f"{deleted_files} Files deleted.\n")
                 
                     else:
