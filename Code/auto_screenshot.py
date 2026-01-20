@@ -5,8 +5,9 @@ import time
 import mss
 import mss.tools
 
-# TODO: Maybe add a status check at the end of each lap which tells you how many laps of data
-#       has been recorded so far along with other useful information
+# TODO: Add audio feedback for delete, start record, and end record.
+
+# TODO: Automate JSON read to csv
 
 def create_session_dir(session_number):
     os.mkdir(f"../Data/image-data/session-{session_number}")
@@ -238,6 +239,8 @@ try:
                 os.rmdir(f"../Data/image-data/session-{new_session}/brake")
                 os.rmdir(f"../Data/image-data/session-{new_session}/throttle")
                 os.rmdir(f"../Data/image-data/session-{new_session}")
+            else:
+                print(f"{lap} laps of data was recorded this session.")
             
             break
 
