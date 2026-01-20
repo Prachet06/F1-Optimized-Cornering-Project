@@ -12,7 +12,7 @@
 ```bash
 root
 ├── Code 
-│   ├── Product Notebook.ipynb
+│   ├── Sector Time Extraction Notebook.ipynb
 │   └── auto_screenshot.py
 ├── Data
 │   ├── image-data

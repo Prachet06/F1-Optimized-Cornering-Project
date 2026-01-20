@@ -43,17 +43,14 @@ if session_list == []:
     create_session_dir(new_session)
 
 else:
-    if len(session_list) == 1:
-        print("Beginning data recording session 2.")
-    else:
-        tracker = []
-        for session in session_list:
-            tracker.append(int(session[-1]))
+    tracker = []
+    for session in session_list:
+        tracker.append(int(session[-1]))
 
-        tracker.sort()
-        new_session = tracker[-1] + 1
-        create_session_dir(new_session)
-        print(f"Beginning data recording session {new_session}.")
+    tracker.sort()
+    new_session = tracker[-1] + 1
+    create_session_dir(new_session)
+    print(f"Beginning data recording session {new_session}.")
         
 # Initialize Colorama 
 # (autoreset=True resets color after each print just to be safe)
@@ -80,7 +77,9 @@ try:
         # Triangle toggle to enable or disable screenshots
         triangle_pressed = bool(state.triangle)
         if triangle_pressed and not was_triangle_pressed:
-            deleted_already = False # So that the user does not accidentally delete the second most recent lap's data 
+
+            deleted_already = False # So that the user does not accidentally delete the second most recent lap's data
+             
             record_start = not record_start
             if record_start:
                 lap += 1
@@ -167,8 +166,10 @@ try:
             if not(record_start): 
                 
                 try:
+                    if lap == 0:
+                        print("No data has been recorded yet.")
                     # So that the user does not accidentally delete the second most recent lap's data 
-                    if deleted_already:
+                    elif deleted_already:
                         print("You have already deleted that lap's data.")
 
                     elif lap != 0:
