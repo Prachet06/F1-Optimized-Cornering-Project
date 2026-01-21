@@ -15,21 +15,42 @@ def create_session_dir(session_number):
     os.mkdir(f"../Data/image-data/session-{session_number}/brake")
     os.mkdir(f"../Data/image-data/session-{session_number}/throttle")
 
-# TODO: Maybe add colours to the logo here:
+# Initialize Colorama 
+# (autoreset=True resets color after each print just to be safe)
+init(autoreset=True) 
 
 
-print('''
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⣶⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   |
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⠿⣿⣷⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀   |    
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣷⡄⠀⠀⠀⠀⠀⠀   |    Press:
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀   |    - Triangle: Enable or disable screenshotting
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⡿⠀⠀⠀⠀⠀⠀   |    - L2: Take a screenshot when brakes are hit
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀   |    - R2: Take a screenshot when throttle is hit
-⠀⠀⠀⠀⠀⠀⠀⣀⣤ ⣿⣿⣿⣿⡇⠀⠈⠉⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀   |    - Dpad Up: Delete previous lap's data
-⠀⢀⣠⣤⣶⣾⣿⣿⡿⠀⣿⣿⣿⣿⡇⠀⢰⣶⣿⣿⣿⠿⠿⢿⣶⣦⣤⡀   |    - Share: Stop the program
-⢰⣿⣿⣿⡿⠛⠉⢀⣀⠀⣿⣿⣿⣿⡇⠀⠘⠋⠉⠀⣀⣠⣴⣾⣿⣿⣿⠇   |    Best of luck!
-⠈⠻⠿⣿⣿⣿⣿⣿⠿⠀⣿⣿⣿⣿⡇⠀⢠⣶⣾⣿⣿⡿⠿⠟⠋⠉⠀⠀   |
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠿⢿⡇⠀⠸⠟⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀   |
+print(f'''{Fore.RED}
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⣶⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   ''', end = "")
+print("|")
+print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⠿⣿⣷⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀   ", end = "")
+print("|")
+print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣷⡄⠀⠀⠀⠀⠀⠀   ", end = "")
+print("|    Press:")
+print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀   ", end = "")
+print("|    - Triangle: Enable or disable screenshotting")
+print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⡿⠀⠀⠀⠀⠀⠀   ", end = "")
+print("|    - L2: Take a screenshot when brakes are hit")
+print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀   ", end = "")
+print("|    - R2: Take a screenshot when throttle is hit")
+print(f"{Fore.BLUE}⠀⠀⠀⠀⠀⠀⠀⣀⣤", end = "")
+print(f"{Fore.RED} ⣿⣿⣿⣿⡇⠀⠈⠉⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀   ", end = "")
+print("|    - Dpad Up: Delete previous lap's data")
+print(f"{Fore.BLUE}⠀⢀⣠⣤⣶⣾⣿⣿⡿⠀", end = "")
+print(f"{Fore.RED}⣿⣿⣿⣿⡇", end = "")
+print(f"{Fore.BLUE}⠀⢰⣶⣿⣿⣿⠿⠿⢿⣶⣦⣤⡀   ", end = "")
+print("|    - Share: Stop the program")
+print(f"{Fore.GREEN}⢰⣿⣿⣿⡿⠛⠉⢀⣀⠀", end = "")
+print(f"{Fore.RED}⣿⣿⣿⣿⡇⠀", end = "")
+print(f"{Fore.GREEN}⠘⠋⠉⠀⣀⣠⣴⣾⣿⣿⣿⠇   ", end = "")
+print("|    Best of luck!")
+print(f"{Fore.YELLOW}⠈⠻⠿⣿⣿⣿⣿⣿⠿⠀", end ="")
+print(f"{Fore.RED}⣿⣿⣿⣿⡇⠀", end = "")
+print(f"{Fore.YELLOW}⢠⣶⣾⣿⣿⡿⠿⠟⠋⠉⠀⠀   ", end ="")
+print("|")
+print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠿⢿⡇⠀", end = "")
+print(f"{Fore.YELLOW}⠸⠟⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀   ", end = "")
+print('''|
 
 Auto screenshot program now running......''')
 
@@ -54,10 +75,6 @@ else:
     new_session = tracker[-1] + 1
     create_session_dir(new_session)
     print(f"Beginning data recording session {new_session}.")
-        
-# Initialize Colorama 
-# (autoreset=True resets color after each print just to be safe)
-init(autoreset=True) 
 
 ds = pydualsense()
 ds.init()
