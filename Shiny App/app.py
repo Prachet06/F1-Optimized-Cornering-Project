@@ -12,7 +12,7 @@ from faicons import icon_svg as icon
 from shinywidgets import render_plotly
 from pathlib import Path
 
-# TODO: fix the css issue
+# TODO: fix the css issue (not having the multiple page setup is a solution.)
 print("CWD:", Path.cwd())
 print("CSS resolves to:", (Path(__file__).parent / "styles.css").resolve())
 print("Exists:", (Path(__file__).parent / "styles.css").exists())
@@ -20,7 +20,7 @@ print("Exists:", (Path(__file__).parent / "styles.css").exists())
 ui.page_opts(title="F1", fillable=True)
 
 with ui.nav_panel("About the Project"):
-    "info about project here"
+    "info about project here. Explain what apexes are and how all of it works, how every tenth or hundredth of a second matters etc."
 
     with ui.card(full_screen=True):
         ui.card_header("A card with a header, add an interactive graph here maybe")

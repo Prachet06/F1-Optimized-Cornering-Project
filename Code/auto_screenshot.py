@@ -6,8 +6,9 @@ import time
 import mss
 import mss.tools
 
-# TODO: Add audio feedback for delete, start record, and end record.
-
+# TODO: Assign a button to declare current lap screenshots or maybe just the last brake screenshot as a crash and another
+#       button to do the same for track limits violations 
+# TODO: maybe record the time between brake and throttle too?
 # TODO: Automate JSON read to csv
 
 def create_session_dir(session_number):
