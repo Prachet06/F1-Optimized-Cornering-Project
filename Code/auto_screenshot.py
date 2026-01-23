@@ -15,10 +15,7 @@ def create_session_dir(session_number):
     os.mkdir(f"../Data/image-data/session-{session_number}/brake")
     os.mkdir(f"../Data/image-data/session-{session_number}/throttle")
 
-# Initialize Colorama 
-# (autoreset=True resets color after each print just to be safe)
 init(autoreset=True) 
-
 
 print(f'''{Fore.RED}
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⣶⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   ''', end = "")
