@@ -6,9 +6,8 @@ import time
 import mss
 import mss.tools
 
-# TODO: Assign a button to declare current lap screenshots or maybe just the last brake screenshot as a crash and another
-#       button to do the same for track limits violations 
-# TODO: maybe record the time between brake and throttle too?
+# TODO: Fix the edge case where the number of brakes is zero and throttles is not and vice versa.
+# TODO: Write time bw brake and throttle to csv
 # TODO: Automate JSON read to csv
 # TODO: Add audio feedback but not at the cost of performance
 
@@ -18,36 +17,34 @@ def create_session_dir(session_number):
     os.mkdir(f"../Data/image-data/session-{session_number}/throttle")
 
 init(autoreset=True) 
-
-# TODO: Update string with new buttons
 print(f'''{Fore.RED}
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⣶⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   ''', end = "")
 print("|")
 print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⠿⣿⣷⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀   ", end = "")
-print("|")
-print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣷⡄⠀⠀⠀⠀⠀⠀   ", end = "")
 print("|    Press:")
-print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀   ", end = "")
+print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣷⡄⠀⠀⠀⠀⠀⠀   ", end = "")
 print("|    - Triangle: Enable or disable screenshotting")
-print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⡿⠀⠀⠀⠀⠀⠀   ", end = "")
+print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀   ", end = "")
 print("|    - L2: Take a screenshot when brakes are hit")
-print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀   ", end = "")
+print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⡿⠀⠀⠀⠀⠀⠀   ", end = "")
 print("|    - R2: Take a screenshot when throttle is hit")
+print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀   ", end = "")
+print("|    - Dpad Up: Delete previous lap's data")
 print(f"{Fore.BLUE}⠀⠀⠀⠀⠀⠀⠀⣀⣤", end = "")
 print(f"{Fore.RED} ⣿⣿⣿⣿⡇⠀⠈⠉⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀   ", end = "")
-print("|    - Dpad Up: Delete previous lap's data")
+print("|    - Dpad Left: Declare previous lap's last inputs as causes of a crash")
 print(f"{Fore.BLUE}⠀⢀⣠⣤⣶⣾⣿⣿⡿⠀", end = "")
 print(f"{Fore.RED}⣿⣿⣿⣿⡇", end = "")
 print(f"{Fore.BLUE}⠀⢰⣶⣿⣿⣿⠿⠿⢿⣶⣦⣤⡀   ", end = "")
-print("|    - Share: Stop the program")
+print("|    - Dpad Right: Declare previous lap's last inputs as causes of a track limits violation")
 print(f"{Fore.GREEN}⢰⣿⣿⣿⡿⠛⠉⢀⣀⠀", end = "")
 print(f"{Fore.RED}⣿⣿⣿⣿⡇⠀", end = "")
 print(f"{Fore.GREEN}⠘⠋⠉⠀⣀⣠⣴⣾⣿⣿⣿⠇   ", end = "")
-print("|    Best of luck!")
+print("|    - Share: Stop the program")
 print(f"{Fore.YELLOW}⠈⠻⠿⣿⣿⣿⣿⣿⠿⠀", end ="")
 print(f"{Fore.RED}⣿⣿⣿⣿⡇⠀", end = "")
 print(f"{Fore.YELLOW}⢠⣶⣾⣿⣿⡿⠿⠟⠋⠉⠀⠀   ", end ="")
-print("|")
+print("|    Best of luck!")
 print(f"{Fore.RED}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠿⢿⡇⠀", end = "")
 print(f"{Fore.YELLOW}⠸⠟⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀   ", end = "")
 print('''|
@@ -103,12 +100,12 @@ try:
             deleted_already = False # So that the user does not accidentally delete the second most recent lap's data
             crash_saved_already = False # So that the user does not accidentally rewrite the second most recent lap's data
             limits_saved_already = False # So that the user does not accidentally rewrite the second most recent lap's data
+            brake_time = 0 # Using this as a flag to avoid recording time when brakes have not been hit.
              
             record_start = not record_start
             if record_start:
                  
                 lap += 1
-                print(f"Screenshotting Enabled | Lap: {lap}")
                 print(f"{Fore.GREEN}++++++++++++++++++++++++      ++                    ++")
                 print(f"{Fore.GREEN}++                    ++      ++++                  ++")
                 print(f"{Fore.GREEN}++                    ++      ++  ++                ++")
@@ -143,12 +140,12 @@ try:
                 print(f"{Fore.RED}--                    --      --                            --                      ")
                 print(f"{Fore.RED}------------------------      --                            --                      ")
                 print(f"{Fore.RED}------------------------      --                            --                      \n")
-
         was_triangle_pressed = triangle_pressed
 
         # L2 screenshot
         l2_pressed = bool(state.L2)
         if record_start and l2_pressed and not was_L2_pressed:
+            brake_time = time.time()
             brake_count += 1
             print(f"L2 press #{brake_count}")
 
@@ -161,12 +158,14 @@ try:
                 mss.tools.to_png(sct_img.rgb, sct_img.size, output=file_loc)
 
             print(f"    -Braking position captureed as: {file_name}")
+            
 
         was_L2_pressed = l2_pressed
 
         # R2 screenshot
         r2_pressed = bool(state.R2)
         if record_start and r2_pressed and not was_R2_pressed:
+            throttle_time = time.time()
             throttle_count += 1
             print(f"R2 press #{throttle_count}")
 
@@ -179,6 +178,12 @@ try:
                 mss.tools.to_png(sct_img.rgb, sct_img.size, output=file_loc)
 
             print(f"    -Throttle position captured as: {file_name}")
+
+            if brake_time != 0:
+                print(f"    -Time between braking and hitting the throttle: {throttle_time - brake_time:.03f} seconds.")
+                print(f"     Related inputs: Brake hit #{brake_count} and throttle hit #{throttle_count}.")
+                brake_time = 0 # to avoid consecutive R2 hits recording time after a single brake hit
+                # TODO: write to csv
 
         was_R2_pressed = r2_pressed
        
