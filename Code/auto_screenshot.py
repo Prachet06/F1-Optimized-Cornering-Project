@@ -10,6 +10,7 @@ import mss.tools
 #       button to do the same for track limits violations 
 # TODO: maybe record the time between brake and throttle too?
 # TODO: Automate JSON read to csv
+# TODO: Add audio feedback but not at the cost of performance
 
 def create_session_dir(session_number):
     os.mkdir(f"../Data/image-data/session-{session_number}")
@@ -18,6 +19,7 @@ def create_session_dir(session_number):
 
 init(autoreset=True) 
 
+# TODO: Update string with new buttons
 print(f'''{Fore.RED}
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⣶⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   ''', end = "")
 print("|")
@@ -82,6 +84,8 @@ was_L2_pressed = False
 was_R2_pressed = False
 was_triangle_pressed = False
 was_DpadUp_pressed = False
+was_DpadLeft_pressed = False
+was_DpadRight_pressed = False
 record_start = False
 
 # For keeping track of the lap number
@@ -97,11 +101,12 @@ try:
         if triangle_pressed and not was_triangle_pressed:
 
             deleted_already = False # So that the user does not accidentally delete the second most recent lap's data
+            crash_saved_already = False # So that the user does not accidentally rewrite the second most recent lap's data
+            limits_saved_already = False # So that the user does not accidentally rewrite the second most recent lap's data
              
             record_start = not record_start
             if record_start:
-                
-                # TODO: Audio for start 
+                 
                 lap += 1
                 print(f"Screenshotting Enabled | Lap: {lap}")
                 print(f"{Fore.GREEN}++++++++++++++++++++++++      ++                    ++")
@@ -125,7 +130,6 @@ try:
                 # to avoid an unneccessary increase in lap number
                 if brake_count == 0 and lap != 0 and throttle_count == 0:
                     lap = lap - 1
-                # TODO: Audio for end 
                 print("\nScreenshotting Disabled.")
                 print(f"{Fore.RED}------------------------      ------------------------      ------------------------")
                 print(f"{Fore.RED}------------------------      ------------------------      ------------------------")
@@ -188,7 +192,11 @@ try:
                 try:
                     if lap == 0:
                         print("No data has been recorded yet.")
-                    # So that the user does not accidentally delete the second most recent lap's data 
+                    # So that the user does not accidentally delete the second most recent lap's data
+                    elif limits_saved_already:
+                        print("You have already saved that lap's data as track limit violating.") 
+                    elif crash_saved_already:
+                        print("You have already saved that lap's data as crash causing.") 
                     elif deleted_already:
                         print("You have already deleted that lap's data.")
 
@@ -212,8 +220,8 @@ try:
                         
                         lap = lap -1
                         deleted_already = True
-                        # TODO: Audio for file deletion 
                         print(f"{deleted_files} Files deleted.\n")
+                        
                 
                     else:
                         print("No data recorded.")
@@ -225,6 +233,149 @@ try:
                 print("End lap by disabling screenshotting to delete its data.")
 
         was_DpadUp_pressed = dpadup_pressed
+
+        # TODO: Fix the edge case where the number of brakes is zero and throttles is not and vice versa.
+
+        # dpad_left to save last lap data as crash causing
+        dpad_left_pressed = bool(state.DpadLeft)
+        if dpad_left_pressed and not was_DpadLeft_pressed:
+
+            # ensure that the lap is concluded before deleting and altering its data.
+            if not(record_start): 
+                
+                try:
+                    if lap == 0:
+                        print("No data has been recorded yet.")
+
+                    # So that the user does not accidentally rewrite the second most recent lap's data
+                    elif deleted_already:
+                        print("You have already deleted that lap's data.")
+                    elif limits_saved_already:
+                        print("You have already saved that lap's data as track limit violating.") 
+                    elif crash_saved_already:
+                        print("You have already saved that lap's data as crash causing.")
+
+                    elif lap != 0:
+
+                        deleted_files = 0 
+                        i = 0
+
+                        try:
+
+                            while i < brake_count - 1:
+                                file_to_remove = f"../Data/image-data/session-{new_session}/brake/Lap_{lap}_Brake hit_{i+1}.png"
+                                os.remove(file_to_remove)
+                                deleted_files += 1 
+                                i += 1
+
+                            # renaming final brake image
+                            old_name = f"../Data/image-data/session-{new_session}/brake/Lap_{lap}_Brake hit_{brake_count}.png"
+                            new_name = f"../Data/image-data/session-{new_session}/brake/Lap_{lap}_crash_causing_brake.png"
+                            os.rename(old_name, new_name)
+
+                            print(f"{deleted_files} braking images deleted and most recent image labelled as crashing causing brake.\n")
+
+                            deleted_files = 0
+
+                            i = 0
+                            while i < throttle_count - 1:
+                                file_to_remove = f"../Data/image-data/session-{new_session}/throttle/Lap_{lap}_Throttle hit_{i+1}.png"
+                                os.remove(file_to_remove)
+                                deleted_files += 1 
+                                i += 1
+
+                            # renaming final brake image
+                            old_name = f"../Data/image-data/session-{new_session}/throttle/Lap_{lap}_Throttle hit_{i+1}.png"
+                            new_name = f"../Data/image-data/session-{new_session}/throttle/Lap_{lap}_crash_causing_throttle_hit.png"
+                            os.rename(old_name, new_name)
+
+                            crash_saved_already = True
+                            print(f"{deleted_files} throttle hit images deleted and most recent image labelled as crash causing throttle hit.\n")
+
+
+                        except FileNotFoundError:
+                            print("The data from the previous lap can't be found.")
+                        
+                    else:
+                        print("No data recorded.")
+
+                except FileNotFoundError:
+                    print("There was no data recorded in the previous lap or it has been deleted.")
+            
+            else:
+                print("End lap by disabling screenshotting to save its data as crash causing.")
+        
+        was_DpadLeft_pressed = dpad_left_pressed       
+
+        # dpad_right to save last lap data as track limit violating
+        dpad_right_pressed = bool(state.DpadRight)
+        if dpad_right_pressed and not was_DpadRight_pressed:
+
+            # ensure that the lap is concluded before deleting and altering its data.
+            if not(record_start): 
+                
+                try:
+                    if lap == 0:
+                        print("No data has been recorded yet.")
+
+                    # So that the user does not accidentally rewrite the second most recent lap's data
+                    elif deleted_already:
+                        print("You have already deleted that lap's data.")
+                    elif crash_saved_already:
+                        print("You have already saved that lap's data as crash causing.")
+                    elif limits_saved_already:
+                        print("You have already saved that lap's data as track limit violating.")
+
+                    elif lap != 0:
+
+                        deleted_files = 0 
+                        i = 0
+
+                        try:
+                            while i < brake_count - 1:
+                                file_to_remove = f"../Data/image-data/session-{new_session}/brake/Lap_{lap}_Brake hit_{i+1}.png"
+                                os.remove(file_to_remove)
+                                deleted_files += 1 
+                                i += 1
+
+                            # renaming final brake image
+                            old_name = f"../Data/image-data/session-{new_session}/brake/Lap_{lap}_Brake hit_{brake_count}.png"
+                            new_name = f"../Data/image-data/session-{new_session}/brake/Lap_{lap}_track_limit_violating_brake.png"
+                            os.rename(old_name, new_name)
+
+                            print(f"{deleted_files} braking images deleted and most recent image labelled as track limit violating brake.\n")
+
+                            deleted_files = 0
+
+                            i = 0
+                            while i < throttle_count - 1:
+                                file_to_remove = f"../Data/image-data/session-{new_session}/throttle/Lap_{lap}_Throttle hit_{i+1}.png"
+                                os.remove(file_to_remove)
+                                deleted_files += 1 
+                                i += 1
+
+                            # renaming final brake image
+                            old_name = f"../Data/image-data/session-{new_session}/throttle/Lap_{lap}_Throttle hit_{i+1}.png"
+                            new_name = f"../Data/image-data/session-{new_session}/throttle/Lap_{lap}_track_limit_violating_throttle_hit.png"
+                            os.rename(old_name, new_name)
+
+                            print(f"{deleted_files} throttle hit images deleted and most recent image labelled as track limit violating throttle hit.\n")
+
+                            limits_saved_already = True
+
+                        except FileNotFoundError:
+                            print("The data from the previous lap can't be found.")
+                        
+                    else:
+                        print("No data recorded.")
+
+                except FileNotFoundError:
+                    print("There was no data recorded in the previous lap or it has been deleted.")
+            
+            else:
+                print("End lap by disabling screenshotting to save its data as track limit violating.")
+        
+        was_DpadRight_pressed = dpad_right_pressed
 
         if state.share:
             print('''Share pressed, exiting...

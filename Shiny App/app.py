@@ -4,6 +4,7 @@
 # TODO: Add a section to view each model's cnn structure
 # TODO: Start making scaffolds for the app, for example, have a section for the cnn prediction but for now just make it an if else statement and so on
 #       this allows for you to get a better feel of how the final app will look
+# TODO: Add a graph for the crashes, track limit violations, fast, slow, and mediocre laps
  
 # TODO: Have a diagram of sector 1 and maybe the images of all the turns it has. 
 from shiny import reactive, req
