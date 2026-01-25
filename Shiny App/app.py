@@ -5,8 +5,9 @@
 # TODO: Start making scaffolds for the app, for example, have a section for the cnn prediction but for now just make it an if else statement and so on
 #       this allows for you to get a better feel of how the final app will look
 # TODO: Add a graph for the crashes, track limit violations, fast, slow, and mediocre laps
- 
 # TODO: Have a diagram of sector 1 and maybe the images of all the turns it has. 
+# TODO: Add a graph of that compares the lap quality and the number of brakes/ accelerations each lap
+
 from shiny import reactive, req
 from shiny.express import input, render, ui
 from faicons import icon_svg as icon
