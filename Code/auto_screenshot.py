@@ -10,6 +10,7 @@ import mss.tools
 # TODO: Write time bw brake and throttle to csv
 # TODO: Automate JSON read to csv
 # TODO: Add audio feedback but not at the cost of performance
+# TODO: Add code to alert the user that no controller is connectedd without crashing the program
 
 def create_session_dir(session_number):
     os.mkdir(f"../Data/image-data/session-{session_number}")
