@@ -206,7 +206,7 @@ try:
                     elif deleted_already:
                         print("You have already deleted that lap's data.")
 
-                    elif lap != 0:
+                    elif lap != 0 and brake_count != 0 and throttle_count != 0:
 
                         deleted_files = 0 
                         i = 0
