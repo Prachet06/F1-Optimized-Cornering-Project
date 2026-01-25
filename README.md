@@ -1,5 +1,6 @@
 # F1-Optimized-Cornering-Project
-
+**Track:** Albert Park, Melbourne, Australia
+![Controller Button Guide](Data/shiny-app-images/Australia_Circuit.avif)
 
 ## Shiny App
 
@@ -15,6 +16,7 @@ root
 │   ├── Sector Time Extraction Notebook.ipynb
 │   └── auto_screenshot.py
 ├── Data
+│   ├── auditory-feedback-data
 │   ├── image-data
 │   │   ├── session-1
 │   │   │   ├── brake 
@@ -25,8 +27,9 @@ root
 │   │   ...
 │   │   ...
 │   │   ...
+│   ├── readme-images
 │   ├── sector-time-data
-│   └── readme-images
+│   └── shiny-app-images
 ├── Shiny App
 │   ├── app.py
 │   └── styles.css
