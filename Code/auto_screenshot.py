@@ -5,12 +5,13 @@ import os
 import time
 import mss
 import mss.tools
+import csv
 
 # TODO: Fix the edge case where the number of brakes is zero and throttles is not and vice versa.
-# TODO: Write time bw brake and throttle to csv
+# TODO: FIX time bw brake and throttle to csv
 # TODO: Automate JSON read to csv
 # TODO: Add audio feedback but not at the cost of performance
-# TODO: Add code to alert the user that no controller is connectedd without crashing the program
+# TODO: Add code to alert the user that no controller is connected without crashing the program
 
 def create_session_dir(session_number):
     os.mkdir(f"../Data/image-data/session-{session_number}")
@@ -85,6 +86,9 @@ was_DpadUp_pressed = False
 was_DpadLeft_pressed = False
 was_DpadRight_pressed = False
 record_start = False
+# empty list to which time difference between breaks and accelerations will be appended to
+b_n_t_delta = [] 
+
 
 # For keeping track of the lap number
 lap = 0
@@ -93,7 +97,7 @@ try:
 
     while True:
         state = ds.state
-
+        # b_n_t_delta_invalid = False
         # Triangle toggle to enable or disable screenshots
         triangle_pressed = bool(state.triangle)
         if triangle_pressed and not was_triangle_pressed:
@@ -181,10 +185,10 @@ try:
             print(f"    -Throttle position captured as: {file_name}")
 
             if brake_time != 0:
-                print(f"    -Time between braking and hitting the throttle: {throttle_time - brake_time:.03f} seconds.")
+                current_b_n_t_delta = throttle_time - brake_time
+                print(f"    -Time between braking and hitting the throttle: {current_b_n_t_delta:.03f} seconds.")
                 print(f"     Related inputs: Brake hit #{brake_count} and throttle hit #{throttle_count}.")
                 brake_time = 0 # to avoid consecutive R2 hits recording time after a single brake hit
-                # TODO: write to csv
 
         was_R2_pressed = r2_pressed
        
@@ -368,6 +372,7 @@ try:
                             print(f"{deleted_files} throttle hit images deleted and most recent image labelled as track limit violating throttle hit.\n")
 
                             limits_saved_already = True
+                            
 
                         except FileNotFoundError:
                             print("The data from the previous lap can't be found.")
@@ -382,6 +387,11 @@ try:
                 print("End lap by disabling screenshotting to save its data as track limit violating.")
         
         was_DpadRight_pressed = dpad_right_pressed
+
+        #if not(b_n_t_delta_invalid):
+         #   if lap != 0 and brake_count != 0 and throttle_count != 0 and current_b_n_t_delta != 0:
+           #     b_n_t_delta.append([lap, current_b_n_t_delta, brake_count, throttle_count])
+          #      print([lap, current_b_n_t_delta, brake_count, throttle_count])
 
         if state.share:
             print('''Share pressed, exiting...
@@ -419,7 +429,13 @@ try:
                 os.rmdir(f"../Data/image-data/session-{new_session}")
             else:
                 print(f"{lap} laps of data was recorded this session.")
-            
+                #path = f"../Data/brake-throttle-delta-data/session-{new_session}.csv"
+                #with open(path, 'w', newline='') as csvfile:
+                #    writer = csv.writer(csvfile)
+                #    writer.writerow(["lap_num", "b_t_delta", "related_b", 'related_T'])
+                #    writer.writerows(b_n_t_delta)
+                #print("Successfully wrote to brake and throttle delta to csv.")
+                            
             break
 
         time.sleep(0.01)
