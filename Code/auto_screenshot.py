@@ -8,8 +8,6 @@ import mss.tools
 import csv
 
 # TODO: Fix the edge case where the number of brakes is zero and throttles is not and vice versa.
-# TODO: FIX time bw brake and throttle to csv
-# TODO: Automate JSON read to csv
 # TODO: Add audio feedback but not at the cost of performance
 # TODO: Add code to alert the user that no controller is connected without crashing the program
 
@@ -88,16 +86,19 @@ was_DpadRight_pressed = False
 record_start = False
 # empty list to which time difference between breaks and accelerations will be appended to
 b_n_t_delta = [] 
-
+current_b_n_t_delta = 0
+flag = False
 
 # For keeping track of the lap number
 lap = 0
+
+
 
 try:
 
     while True:
         state = ds.state
-        # b_n_t_delta_invalid = False
+        b_n_t_delta_invalid = False
         # Triangle toggle to enable or disable screenshots
         triangle_pressed = bool(state.triangle)
         if triangle_pressed and not was_triangle_pressed:
@@ -186,6 +187,7 @@ try:
 
             if brake_time != 0:
                 current_b_n_t_delta = throttle_time - brake_time
+                flag = True
                 print(f"    -Time between braking and hitting the throttle: {current_b_n_t_delta:.03f} seconds.")
                 print(f"     Related inputs: Brake hit #{brake_count} and throttle hit #{throttle_count}.")
                 brake_time = 0 # to avoid consecutive R2 hits recording time after a single brake hit
@@ -227,6 +229,11 @@ try:
                             os.remove(file_to_remove)
                             deleted_files += 1 
                             i += 1
+                        
+                        for i in range(len(b_n_t_delta) - 1, -1, -1):
+                            if b_n_t_delta[i][0] == lap:
+                                b_n_t_delta.pop(i)
+
                         
                         lap = lap -1
                         deleted_already = True
@@ -388,10 +395,12 @@ try:
         
         was_DpadRight_pressed = dpad_right_pressed
 
-        #if not(b_n_t_delta_invalid):
-         #   if lap != 0 and brake_count != 0 and throttle_count != 0 and current_b_n_t_delta != 0:
-           #     b_n_t_delta.append([lap, current_b_n_t_delta, brake_count, throttle_count])
-          #      print([lap, current_b_n_t_delta, brake_count, throttle_count])
+        if flag:
+            if not(b_n_t_delta_invalid):
+                if lap != 0 and brake_count != 0 and throttle_count != 0 and current_b_n_t_delta != 0:
+                    b_n_t_delta.append([lap, current_b_n_t_delta, brake_count, throttle_count])
+                    print([lap, current_b_n_t_delta, brake_count, throttle_count])
+                    flag = False
 
         if state.share:
             print('''Share pressed, exiting...
@@ -429,12 +438,13 @@ try:
                 os.rmdir(f"../Data/image-data/session-{new_session}")
             else:
                 print(f"{lap} laps of data was recorded this session.")
-                #path = f"../Data/brake-throttle-delta-data/session-{new_session}.csv"
-                #with open(path, 'w', newline='') as csvfile:
-                #    writer = csv.writer(csvfile)
-                #    writer.writerow(["lap_num", "b_t_delta", "related_b", 'related_T'])
-                #    writer.writerows(b_n_t_delta)
-                #print("Successfully wrote to brake and throttle delta to csv.")
+                path = f"../Data/brake-throttle-delta-data/session-{new_session}.csv"
+                with open(path, 'w', newline='') as csvfile:
+                    writer = csv.writer(csvfile)
+                    writer.writerow(["lap_num", "b_t_delta", "related_b", 'related_T'])
+                    writer.writerows(b_n_t_delta)
+                print("Successfully wrote to brake and throttle delta to csv.")
+                
                             
             break
 
@@ -442,5 +452,3 @@ try:
 
 finally:
     ds.close()
-
- 
