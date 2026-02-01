@@ -1,6 +1,5 @@
 from pydualsense import pydualsense
 from colorama import init, Fore, Style
-from playsound3 import playsound
 import os
 import time
 import mss
@@ -8,7 +7,6 @@ import mss.tools
 import csv
 
 # TODO: Fix the edge case where the number of brakes is zero and throttles is not and vice versa.
-# TODO: Add audio feedback but not at the cost of performance
 # TODO: Add code to alert the user that no controller is connected without crashing the program
 
 def create_session_dir(session_number):

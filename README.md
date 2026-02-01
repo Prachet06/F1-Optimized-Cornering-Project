@@ -18,8 +18,8 @@ root
 │   ├── Sector Time Extraction Notebook.ipynb
 │   └── auto_screenshot.py
 ├── Data
-│   ├── auditory-feedback-data
 │   ├── brake-throttle-delta-data
+│   ├── collated-data
 │   ├── image-data
 │   │   ├── session-1
 │   │   │   ├── brake 
