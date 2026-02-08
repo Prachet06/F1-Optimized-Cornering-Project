@@ -64,10 +64,10 @@ if session_list == []:
 else:
     tracker = []
     for session in session_list:
-        tracker.append(int(session[-1]))
+        session_num = int(session.split("-")[1])
+        tracker.append(session_num)
 
-    tracker.sort()
-    new_session = tracker[-1] + 1
+    new_session = max(tracker) + 1
     create_session_dir(new_session)
     print(f"Beginning data recording session {new_session}.")
 
