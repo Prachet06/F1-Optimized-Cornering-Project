@@ -5,28 +5,8 @@ import re
 
 # When a brake or throttle is crash causing or tl violating and only has braking an empty list is appended.
 
-# TODO: Write a script that extracts all the data related to each lap from each session
-#       and stores them in a csv that has info of all the image data for the laps too
-
 # TODO: Collate all the images into a folder and name them accordingly with the right sequence
 #       and an overall lap number
-
-
-# data = []
-# for i in range(5):
-#     data.append([[]])
-
-# path_a = f"../Data/collated-data/break_deltas.csv"
-# with open(path_a, 'w', newline='') as csvfile:
-#     writer = csv.writer(csvfile)
-#     writer.writerow(["lap_num", "b_t_delta", "related_b", 'related_T'])
-#     writer.writerows(data)
-# print("Successfully || update this later.")
-
-# TODO: Collate all lap sector 1 times and all the images associated with them, and then  
-#       number them with an overall lap number
-
-# TODO: Collate the lap brake-throttle deltas too into the new csv.
 
 collated_lap_data = []
 
@@ -65,18 +45,18 @@ for i in range(len(session_list)):
                 # TODO: Need to not account for the lap with sector time 0
                 for k in range(len(brake_dir_list)):
                     cur_img = brake_dir_list[k]
-                    search_brake_dfault = re.search(f"Lap_{j+1}_Brake", cur_img)
+                    search_brake_dfault = re.search(f"Lap_{j + 1}_Brake", cur_img)
                     if search_brake_dfault != None:    
                         final_str = f"../Data/image-data/session-{current_session}/brake/" + search_brake_dfault.string
                         brakes_assoc.append(final_str)
                     
-                    search_brake_crash = re.search(f"Lap_{j+1}_crash", cur_img)
+                    search_brake_crash = re.search(f"Lap_{j + 1}_crash", cur_img)
                     if search_brake_crash != None:
                         final_str = f"../Data/image-data/session-{current_session}/brake/" + search_brake_crash.string    
                         incident = "crash"
                         brakes_assoc.append(final_str)
 
-                    search_brake_tlimit = re.search(f"Lap_{j+1}_track", cur_img)
+                    search_brake_tlimit = re.search(f"Lap_{j + 1}_track", cur_img)
                     if search_brake_tlimit != None:    
                         final_str = f"../Data/image-data/session-{current_session}/brake/" + search_brake_tlimit.string 
                         incident = "track limit violation"
@@ -92,19 +72,19 @@ for i in range(len(session_list)):
 
                 for k in range(len(throttle_dir_list)):
                     cur_img = throttle_dir_list[k]
-                    search_throttle_dfault = re.search(f"Lap_{j+1}_Throttle", cur_img)
+                    search_throttle_dfault = re.search(f"Lap_{j + 1}_Throttle", cur_img)
 
                     if search_throttle_dfault != None:    
                         final_str = f"../Data/image-data/session-{current_session}/throttle/" + search_throttle_dfault.string
                         throttles_assoc.append(final_str)
                     
-                    search_throttle_crash = re.search(f"Lap_{j+1}_crash", cur_img)
+                    search_throttle_crash = re.search(f"Lap_{j + 1}_crash", cur_img)
                     if search_throttle_crash != None:    
                         final_str = f"../Data/image-data/session-{current_session}/throttle/" + search_throttle_crash.string
                         incident = "crash"
                         throttles_assoc.append(final_str)
 
-                    search_throttle_tlimit = re.search(f"Lap_{j+1}_track", cur_img)
+                    search_throttle_tlimit = re.search(f"Lap_{j + 1}_track", cur_img)
                     if search_throttle_tlimit != None:    
                         final_str = f"../Data/image-data/session-{current_session}/throttle/" + search_throttle_tlimit.string
                         incident = "track limit violation"
@@ -112,8 +92,20 @@ for i in range(len(session_list)):
 
                 # print(throttles_assoc)
 
+                # Acquiring brake throttle deltas
+                b_t_deltas = []
+                if current_session > 5:
+                    with open(f"../Data/brake-throttle-delta-data/session-{current_session}.csv", mode='r') as file:
+                        csvFile = csv.reader(file)
+                        for lines in csvFile:
+                                if lines[0] == 'lap_num':
+                                    continue
+                                elif int(lines[0]) == j + 1:
+                                    # appending b_t_delta,related_b, and related_T
+                                    b_t_deltas.append(lines[1:])
+
                 # Append all four of these to a list and then finally a csv
-                collated_lap_data.append([collated_lap_count, cur_lap_sec_one, incident, brakes_assoc, throttles_assoc])
+                collated_lap_data.append([collated_lap_count, cur_lap_sec_one, incident, brakes_assoc, throttles_assoc, b_t_deltas])
 
 # for i in range(len(collated_lap_data)):
 #     print(collated_lap_data[i])
@@ -125,6 +117,6 @@ print(len(collated_lap_data))
 path_b = f"../Data/collated-data/lap-image-association.csv"
 with open(path_b, 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
-    writer.writerow(["lap_num", "s1_time", "incident", "related_b_hits", 'related_t_hits'])
+    writer.writerow(["lap_num", "s1_time", "incident", "related_b_hits", 'related_t_hits', 'brake_throttle_deltas'])
     writer.writerows(collated_lap_data)
 print("Successfully wrote collated data into newly created file: lap-image-association.csv.")
