@@ -102,7 +102,7 @@ for i in range(len(session_list)):
                                     continue
                                 elif int(lines[0]) == j + 1:
                                     # appending b_t_delta,related_b, and related_T
-                                    b_t_deltas.append(lines[1:])
+                                    b_t_deltas.append([float(lines[1]), float(lines[2]), float(lines[3])])
 
                 # Append all four of these to a list and then finally a csv
                 collated_lap_data.append([collated_lap_count, cur_lap_sec_one, incident, brakes_assoc, throttles_assoc, b_t_deltas])
