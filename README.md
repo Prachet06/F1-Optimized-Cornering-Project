@@ -17,8 +17,12 @@ For this project, in an effort to reduce confounding factors that might have had
 ```bash
 root
 ├── Code 
-│   ├── Sector Time Extraction Notebook.ipynb
-│   └── auto_screenshot.py
+│   ├── auto_screenshot.py
+│   ├── CNN.py
+│   ├── Data Analysis Notebook.ipynb
+│   ├── data_collate.py
+│   ├── README.md
+│   └── Sector Time Extraction Notebook.ipynb
 ├── Data
 │   ├── brake-throttle-delta-data
 │   ├── collated-data
