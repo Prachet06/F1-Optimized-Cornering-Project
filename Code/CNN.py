@@ -8,3 +8,7 @@ import tensorflow as tf
 
 from tensorflow.keras import datasets, layers, models
 import matplotlib.pyplot as plt
+
+
+# TODO: Choose a method to normalize the data you have which is helpful for YOUR data
+

@@ -5,9 +5,6 @@ import re
 
 # When a brake or throttle is crash causing or tl violating and only has braking an empty list is appended.
 
-# TODO: Collate all the images into a folder and name them accordingly with the right sequence
-#       and an overall lap number
-
 collated_lap_data = []
 
 # To get the number of sessions by counting the number of json files

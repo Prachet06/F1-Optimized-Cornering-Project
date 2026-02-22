@@ -21,6 +21,7 @@ root
 │   ├── CNN.py
 │   ├── Data Analysis Notebook.ipynb
 │   ├── data_collate.py
+│   ├── img_to_class.py
 │   ├── README.md
 │   └── Sector Time Extraction Notebook.ipynb
 ├── Data
