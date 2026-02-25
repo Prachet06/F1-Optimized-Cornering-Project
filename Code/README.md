@@ -16,9 +16,6 @@ This code is written under the assumption that it will run on a second monitor w
 ## Purpose of data_collate.py
 This script is supposed to collate all numerical along with the addresses of all the images associated with each lap into one file. It is designed to run after all the data has been recorded.
 
-## Purpose of img_to_class.py
-This script puts image data from each session and puts them into the appropriate class folder that the CNN will train on. This is meant to be run just once after data has been recorded.
-
 ## Purpose of Sector Time Extraction Notebook.ipynb
 
 This notebook is a detailed walkthrough of my thinking when I first extracted the lap sector-1 times from the json files that the Pits n Giggles app produces. It also was a chance for me to practice literate programming.
