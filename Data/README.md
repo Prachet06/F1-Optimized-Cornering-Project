@@ -2,6 +2,8 @@
 
 ## brake-throttle-delta-data
 
+## cnn-classes
+
 ## collated-data
 
 ## image-data
