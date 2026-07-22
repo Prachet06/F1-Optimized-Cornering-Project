@@ -11,7 +11,7 @@ write about dpadup and how you avoided the issue to delete the second most recen
 
 This code is written under the assumption that it will run on a second monitor while data is being recorded. This is why there are lines of coloured string printed after enabling or disabling screenshotting as it allows the user to deduce whether screenshotting is enabled or disabled using the colour visible in their peripheral vision. 
 
-## Purpose of CNN.py
+## Purpose of Model.ipynb
 
 ## Purpose of data_collate.py
 This script is supposed to collate all numerical along with the addresses of all the images associated with each lap into one file. It is designed to run after all the data has been recorded.

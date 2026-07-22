@@ -18,7 +18,7 @@ For this project, in an effort to reduce confounding factors that might have had
 root
 ├── Code 
 │   ├── auto_screenshot.py
-│   ├── CNN.py
+│   ├── Model.ipynb
 │   ├── Data Analysis Notebook.ipynb
 │   ├── data_collate.py
 │   ├── README.md
@@ -37,6 +37,11 @@ root
 │   │   ...
 │   │   ...
 │   │   ...
+│   ├── manifests
+│   │   ├── image-manifest.csv
+│   │   ├── lap-manifest.csv
+│   │   ├── image-manifest-with-split.csv
+│   │   └── lap-manifest-with-split.csv
 │   ├── readme-images
 │   ├── sector-time-data
 │   └── shiny-app-images
