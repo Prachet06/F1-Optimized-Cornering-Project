@@ -1,0 +1,10 @@
+fold,held_out_session,training_laps,held_out_laps,held_out_classes,fold_accuracy,fold_majority_class,fold_majority_accuracy
+1,8,58,6,2,0.16666666666666666,standard_laps,0.8333333333333334
+2,9,61,3,3,1.0,standard_laps,0.3333333333333333
+3,10,53,11,3,0.5454545454545454,standard_laps,0.6363636363636364
+4,13,59,5,3,0.8,standard_laps,0.2
+5,15,59,5,3,0.6,standard_laps,0.6
+6,16,56,8,2,0.875,standard_laps,0.5
+7,17,51,13,3,0.6923076923076923,standard_laps,0.46153846153846156
+8,18,57,7,2,0.5714285714285714,standard_laps,0.2857142857142857
+9,19,58,6,3,0.6666666666666666,standard_laps,0.5
