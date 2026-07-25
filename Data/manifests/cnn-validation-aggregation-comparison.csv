@@ -1,0 +1,6 @@
+aggregation_method,accuracy,balanced_accuracy,correct_laps,total_laps
+Majority vote,0.5555555555555556,0.4166666666666667,10,18
+Brake images only,0.5,0.3796296296296296,9,18
+Throttle images only,0.5,0.36296296296296293,9,18
+Mean softmax — all four images,0.5,0.3333333333333333,9,18
+"Mean logits, then softmax",0.5,0.3333333333333333,9,18
