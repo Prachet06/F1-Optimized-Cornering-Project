@@ -1,0 +1,5 @@
+model,accuracy,balanced_accuracy
+Majority baseline,0.4838709677419355,0.3333333333333333
+Throttle-only CNN,0.5806451612903226,0.6138888888888889
+Delta logistic regression,0.41935483870967744,0.425
+CNN + delta geometric fusion,0.5161290322580645,0.5499999999999999

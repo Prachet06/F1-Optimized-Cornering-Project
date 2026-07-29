@@ -1,0 +1,5 @@
+cnn_model,checkpoint,standalone_throttle_accuracy,standalone_throttle_balanced_accuracy,best_geometric_cnn_weight,best_geometric_delta_weight,geometric_fusion_accuracy,geometric_fusion_balanced_accuracy,correct_validation_laps,validation_laps
+Last block trainable,best_resnet18_last_block_throttle.pth,0.5185185185185185,0.5347985347985348,0.37,0.63,0.7037037037037037,0.706959706959707,19,27
+Fully fine-tuned,best_resnet18.pth,0.5185185185185185,0.5128205128205128,0.11,0.89,0.6666666666666666,0.7032967032967034,18,27
+Entire layer4 trainable,best_resnet18_partial_throttle.pth,0.5555555555555556,0.5384615384615384,0.18,0.8200000000000001,0.6666666666666666,0.6813186813186815,18,27
+Fully frozen,best_resnet18_frozen_throttle.pth,0.48148148148148145,0.5970695970695971,0.23,0.77,0.5925925925925926,0.652014652014652,16,27
