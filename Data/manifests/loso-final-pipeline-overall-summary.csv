@@ -1,0 +1,5 @@
+model,accuracy,balanced_accuracy,correct_laps,total_laps
+CNN + delta geometric fusion,0.6390532544378699,0.6641056422569028,108,169
+Delta logistic regression,0.5384615384615384,0.6004801920768307,91,169
+Throttle-only CNN,0.6272189349112426,0.5879151660664266,106,169
+Fold-specific majority baseline,0.5029585798816568,0.3333333333333333,85,169

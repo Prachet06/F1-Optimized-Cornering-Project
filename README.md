@@ -2,7 +2,7 @@
 The aim of this project is to combine visual and numerical inputs to model corner-taking decisions and their impact on lap-time performance in Formula 1.
 
 **Track:** Albert Park, Melbourne, Australia
-![Controller Button Guide](Data/shiny-app-images/Australia_Circuit.avif)
+![Controller Button Guide](Data/readme-images/Australia_Circuit.avif)
 For this project, in an effort to reduce confounding factors that might have had an impact on the lap time apart from the braking and throttle points, the data recorded is only of Sector 1 of the track (the part highlighted in red). The first sector has 5 turns and usually a pilot does not need to break more than three or even two times as the other corners don't necessarily require the driver to slow down or stop accelerating.
 
 
@@ -43,10 +43,6 @@ root
 │   │   ├── image-manifest-with-split.csv
 │   │   └── lap-manifest-with-split.csv
 │   ├── readme-images
-│   ├── sector-time-data
-│   └── shiny-app-images
-├── Shiny App
-│   ├── app.py
-│   └── styles.css
+│   └── sector-time-data
 └── README.md
 ```
