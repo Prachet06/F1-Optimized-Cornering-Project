@@ -17,15 +17,18 @@ For this project, in an effort to reduce confounding factors that might have had
 ```bash
 root
 ├── Code 
-│   ├── auto_screenshot.py
-│   ├── Model.ipynb
-│   ├── Data Analysis Notebook.ipynb
-│   ├── data_collate.py
-│   ├── README.md
-│   └── Sector Time Extraction Notebook.ipynb
+│   ├── notebooks
+│   │   ├── Data Analysis Notebook.ipynb
+│   │   ├── loocv.ipynb
+│   │   ├── Model.ipynb
+│   │   ├── Rebuild_Manifests_and_Splits.ipynb
+│   │   └── Sector_Time_Extraction.ipynb
+│   ├── scripts
+│   │   ├── auto_screenshot.py
+│   │   └── data_collate.py
+│   └── README.md
 ├── Data
 │   ├── brake-throttle-delta-data
-│   ├── cnn-classes
 │   ├── collated-data
 │   ├── image-data
 │   │   ├── session-1
@@ -36,13 +39,18 @@ root
 │   │   │   └── throttle
 │   │   ...
 │   │   ...
-│   │   ...
 │   ├── manifests
 │   │   ├── image-manifest.csv
 │   │   ├── lap-manifest.csv
 │   │   ├── image-manifest-with-split.csv
 │   │   └── lap-manifest-with-split.csv
 │   ├── readme-images
-│   └── sector-time-data
+│   ├── results
+│   │   ├── loso
+│   │   ├── test
+│   │   ├── validation
+│   ├── sector-time-data
+│   └── README.md
+├── Models
 └── README.md
 ```
