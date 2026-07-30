@@ -18,14 +18,13 @@ For this project, in an effort to reduce confounding factors that might have had
 root
 ├── Code 
 │   ├── notebooks
-│   │   ├── Data Analysis Notebook.ipynb
-│   │   ├── loocv.ipynb
-│   │   ├── Model.ipynb
-│   │   ├── Rebuild_Manifests_and_Splits.ipynb
-│   │   └── Sector_Time_Extraction.ipynb
+│   │   ├── data_analysis.ipynb
+│   │   ├── final_modelling.ipynb
+│   │   ├── rebuild_manifests_and_splits.ipynb
+│   │   └── sector_time_extraction.ipynb
 │   ├── scripts
-│   │   ├── auto_screenshot.py
-│   │   └── data_collate.py
+│   │   ├── collect_screenshots_and_deltas.py
+│   │   └── collate_session_data.py
 │   └── README.md
 ├── Data
 │   ├── brake-throttle-delta-data
