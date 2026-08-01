@@ -52,7 +52,20 @@ The elapsed time between a braking input and the associated throttle input is re
 The script automatically creates a new session directory each time data collection begins, preventing previously recorded screenshots from being overwritten. Screenshots are stored separately in `brake` and `throttle` directories for each session.
 
 ## 2.4 Controller Button Guide
-![Controller Button Guide](Data/readme-images/button-guide.jpeg)
+<table>
+  <tr>
+    <th>Controller Guide 1</th>
+    <th>Controller Guide 2</th>
+  </tr>
+  <tr>
+    <td>
+      <img src="Data/readme-images/button-guide-1.PNG" width="420">
+    </td>
+    <td>
+      <img src="Data/readme-images/button-guide-2.PNG" width="420">
+    </td>
+  </tr>
+</table>
 
 The data-collection script responds to the following PS5 DualSense controller inputs:
 
@@ -689,15 +702,13 @@ The following images show the four screenshots associated with one representativ
   </tr>
 </table>
 
-The following table shows the numerical data associated with the final lap recorded.
+Although all four screenshots were available during model development, validation experiments found that averaging the predictions from the two throttle screenshots produced the strongest lap-level CNN performance. The final image model therefore uses only the two throttle images when generating a prediction for a lap.
+
+The screenshots do not directly display the brake–throttle delta measurements. Those values were recorded separately by the controller-input collection script and supplied to the logistic regression model as numerical features.The following table shows the numerical data associated with the final lap recorded.
 
 | Example attribute | Value |
 |---|---:|
 | Sector 1 time | 28.092 s |
 | Assigned class | Optimal |
-| First brake–throttle delta | 1.560410499572754 s |
-| Second brake–throttle delta | 2.179224967956543 s |
-
-Although all four screenshots were available during model development, validation experiments found that averaging the predictions from the two throttle screenshots produced the strongest lap-level CNN performance. The final image model therefore uses only the two throttle images when generating a prediction for a lap.
-
-The screenshots do not directly display the brake–throttle delta measurements. Those values were recorded separately by the controller-input collection script and supplied to the logistic regression model as numerical features.
+| First brake–throttle delta | 1.560 s |
+| Second brake–throttle delta | 2.180 s |
