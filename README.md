@@ -54,7 +54,7 @@ The script automatically creates a new session directory each time data collecti
 ## 2.4 Controller Button Guide
 <table>
   <tr>
-    <th>Controller Guide 1</th>
+    <th>Controller Button Guide</th>
   </tr>
   <tr>
     <td>
@@ -62,7 +62,7 @@ The script automatically creates a new session directory each time data collecti
     </td>
   </tr>
   <tr>
-    <th>Controller Guide 2</th>
+    <th>Controller Trigger Guide</th>
   </tr>
   <tr>
     <td>
@@ -308,7 +308,7 @@ The image model was based on **ResNet18**, initialised using weights learned fro
 
 Transfer learning was used because the project contains only 788 eligible images, which is insufficient for reliably training a deep convolutional network from random initialisation.
 
-![ResNet18 fine-tuning configuration](Data/readme-images/resnet18-architecture.svg)
+![ResNet18 fine-tuning configuration](Data/readme-images/simplified-cnn-architecture.png)
 
 > The diagram above shows the sections of ResNet18 that were frozen and fine-tuned in the selected configuration.
 
