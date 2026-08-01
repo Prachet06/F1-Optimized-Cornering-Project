@@ -26,7 +26,7 @@ Sector 1 contains five turns but generally requires only two or three major brak
 
 Restricting the analysis to one sector also helped reduce the influence of factors such as mistakes made elsewhere in the lap, and differences in performance across unrelated corner types.
 
-## 2.2. Controlled Recording Conditions
+## 2.2 Controlled Recording Conditions
 
 To make the recording sessions as comparable as possible, all controllable in-game settings were kept consistent throughout data collection. The same track and environmental conditions were used for every session, while vehicle damage and tyre degradation were disabled.
 
@@ -70,7 +70,7 @@ The script also displays large coloured terminal messages when recording is enab
 
 > **Note:** The collection script currently depends on the `pydualsense` library and was designed specifically for a PS5 DualSense controller.
 
-## 2.5. Sector-Time Extraction and Data Association
+## 2.5 Sector-Time Extraction and Data Association
 
 The screenshot-collection script does not directly obtain official sector times from the game. Instead, I used the [Pits n' Giggles F1 Telemetry Companion](https://github.com/ashwin-nat/pits-n-giggles) to export lap-history telemetry from *F1 25*.
 
@@ -85,7 +85,7 @@ The `data_collate.py` script combines these sources into a single lap-level data
 
 Brake–throttle delta recording was introduced after the first five sessions. Consequently, sessions 1–5 contain screenshots and sector-time information but do not contain delta measurements.
 
-## 2.6. Collected Dataset Summary
+## 2.6 Collected Dataset Summary
 
 Data was recorded across **25 separate driving sessions**, producing a collated dataset of **255 laps**.
 
@@ -112,13 +112,13 @@ Brake–throttle delta recording was introduced after the first five sessions. S
 
 This section describes the complete collected dataset before any eligibility filtering. The following section explains which laps were retained for modelling and how their performance labels were assigned.
 
-# 3. Lap Eligibility and Labelling Rules
+# 3 Lap Eligibility and Labelling Rules
 
 Not every recorded lap was suitable for training and evaluating the final models. Before assigning performance labels, a set of eligibility rules was applied to remove incident laps, unusually slow sectors and laps with incomplete or inconsistent screenshot sequences.
 
 The full filtering and labelling process is documented in [`data_analysis.ipynb`](Code/notebooks/data_analysis.ipynb).
 
-## 3.1. Original Five-Class Objective
+## 3.1 Original Five-Class Objective
 
 The original aim of the project was to classify laps into five categories:
 
@@ -145,7 +145,7 @@ Training crash and track-limits classifiers using these small and structurally d
 
 Crash and track-limits laps were retained in the raw dataset as records of the collection process but excluded from model training and evaluation.
 
-## 3.2. Eligibility Rules
+## 3.2 Eligibility Rules
 
 A recorded lap was considered eligible for performance labelling only when it satisfied all four of the following conditions:
 
@@ -168,7 +168,7 @@ The image-count requirements created a consistent four-image structure for every
 
 These rules are specific to the dataset and collection method used in this project. They do not imply that every valid lap of Albert Park must contain exactly two braking or throttle applications. Instead, they remove laps affected by missed captures, additional trigger presses or incident-specific recording behaviour.
 
-## 3.3. Filtering Outcome
+## 3.3 Filtering Outcome
 
 The eligibility rules reduced the dataset from **255 recorded laps to 197 eligible laps**.
 
@@ -193,7 +193,7 @@ Of these 197 laps:
 
 All 197 laps could be used by the image model, while only the 169 laps with complete delta measurements could be used by the delta model and the final fused pipeline.
 
-## 3.4. Quantile-Based Performance Labels
+## 3.4 Quantile-Based Performance Labels
 
 The three performance classes were defined using the distribution of Sector 1 times among the **197 eligible laps**.
 
@@ -218,7 +218,7 @@ This assigns approximately:
 
 Using quartiles avoided selecting arbitrary time boundaries and produced two equally sized extreme-performance classes, with the larger standard class representing the centre of the observed performance distribution.
 
-## 3.5. Interpretation of the Labels
+## 3.5 Interpretation of the Labels
 
 The labels describe performance **relative to the dataset collected for this project**.
 
@@ -228,7 +228,7 @@ Similarly, **Sub-standard** refers to the slowest quarter of this dataset rather
 
 The labels are derived from Sector 1 time, which is the outcome the models attempt to predict from braking screenshots, throttle screenshots and brake–throttle delta measurements. These recorded inputs are expected to contain useful information about performance, but they do not capture every factor that may affect the sector time, such as steering input, racing line or corner-entry speed.
 
-# 4. Models
+# 4 Models
 
 Three modelling approaches were evaluated:
 
@@ -242,7 +242,7 @@ The complete implementation and experimental comparisons are available in [`fina
 
 The data was split by **recording session**, rather than by individual image or lap.
 
-This prevents screenshots from the same session from appearing in both training and evaluation subsets. Images recorded during one session may share visual conditions, background details and driver behaviour, so an image-level random split could produce information leakage.
+This prevents screenshots from the same session from appearing in both training and evaluation subsets. Images recorded during one session may share visual conditions and driver behaviour, so an image-level random split could produce information leakage.
 
 The fixed split contains:
 
@@ -254,31 +254,22 @@ The fixed split contains:
 
 The validation set was used to compare CNN configurations, image-aggregation strategies and fusion methods. The test set was evaluated only after the final pipeline had been selected.
 
-### Evaluation Metrics
+### 4.1.1 Evaluation Metrics
 
 Ordinary accuracy measures the proportion of all predictions that are correct:
 
-$$
+```math
 \mathrm{Accuracy}
 =
 \frac{\text{Number of correct predictions}}
 {\text{Total number of predictions}}
-$$
+```
 
 However, the final dataset contains twice as many standard laps as either optimal or sub-standard laps. A model could therefore obtain a misleadingly high ordinary accuracy by favouring the standard class.
 
-For this reason, **balanced accuracy** was used as the main model-selection metric. Recall for a class is:
+For this reason, **balanced accuracy** was used as the main model-selection metric. Balanced accuracy is the mean recall across the three classes:
 
-$$
-\mathrm{Recall}_c
-=
-\frac{\mathrm{TP}_c}
-{\mathrm{TP}_c+\mathrm{FN}_c}
-$$
-
-Balanced accuracy is the mean recall across the three classes:
-
-$$
+```math
 \mathrm{Balanced\ Accuracy}
 =
 \frac{
@@ -288,13 +279,13 @@ $$
 +
 \mathrm{Recall}_{\mathrm{substandard}}
 }{3}
-$$
+```
 
 This gives equal importance to each class regardless of its frequency.
 
 Ordinary accuracy was used as a secondary metric. Confusion matrices, class-wise precision, recall and F1-scores were also examined to identify which classes were responsible for model errors.
 
-## 4.2. Convolutional Neural Network
+## 4.2 Convolutional Neural Network
 
 The image model was based on **ResNet18**, initialised using weights learned from ImageNet.
 
@@ -304,7 +295,7 @@ Transfer learning was used because the project contains only 788 eligible images
 
 > The diagram above shows the sections of ResNet18 that were frozen and fine-tuned in the selected configuration.
 
-### 4.2.1. Fine-Tuning Experiments
+### 4.2.1 Fine-Tuning Experiments
 
 Four transfer-learning strategies were compared:
 
@@ -324,13 +315,13 @@ The selected configuration trained:
 
 The remaining pretrained layers were frozen. Batch-normalisation parameters in the trainable residual block were also kept frozen to reduce instability caused by the small training set.
 
-This configuration provided a middle ground between preserving pretrained visual features and allowing limited task-specific adaptation.
+This configuration provided a balance between preserving pretrained visual features and allowing limited task-specific adaptation.
 
-### 4.2.2. From Image Predictions to Lap Predictions
+### 4.2.2 From Image Predictions to Lap Predictions
 
 The CNN produces one probability vector for each screenshot, but the target label belongs to the complete lap.
 
-Each eligible lap contains:
+Each *eligible* lap contains:
 
 - two braking screenshots; and
 - two throttle screenshots.
@@ -345,7 +336,7 @@ Several methods for combining the image probabilities were evaluated on the vali
 
 Averaging the probabilities from the **two throttle screenshots** produced the strongest validation performance. The final CNN prediction for a lap was therefore:
 
-$$
+```math
 p_{\mathrm{CNN}}(c)
 =
 \frac{
@@ -353,19 +344,19 @@ p_{\mathrm{throttle\ 1}}(c)
 +
 p_{\mathrm{throttle\ 2}}(c)
 }{2}
-$$
+```
 
-This result suggests that throttle screenshots either contained more useful information about Sector 1 performance or were represented more consistently across laps.
+This result implies that throttle screenshots either contained more useful information about Sector 1 performance or were represented more consistently across laps.
 
-It does not demonstrate that braking position is unimportant. It only shows that the trained CNN extracted more reliable validation predictions from the throttle screenshots in this dataset.
+It does not prove that braking position is unimportant. It only shows that the trained CNN extracted more reliable validation predictions from the throttle screenshots in this dataset.
 
 ![CNN aggregation comparison](Data/readme-images/cnn-aggregation-comparison.png)
 
-## 4.3. Delta Logistic Regression Model
+## 4.3 Delta Logistic Regression Model
 
 The second model used numerical measurements rather than images.
 
-For each eligible lap with complete delta information, two features were used:
+For each *eligible* lap with complete delta information, two features were used:
 
 1. the first recorded brake-to-throttle time interval; and
 2. the second recorded brake-to-throttle time interval.
@@ -375,26 +366,28 @@ These features are referred to as:
 - `delta_1_seconds`; and
 - `delta_2_seconds`.
 
-Both features were used by the model. The phrase “second delta” refers only to the second recorded brake-to-throttle transition; it was not the only delta included.
-
-The model consisted of:
+Both features were used by the model. The model consisted of:
 
 1. a `StandardScaler` to standardise the two features; and
 2. a three-class logistic regression classifier.
 
-Standardisation prevents the scale of a feature from affecting the fitted coefficients. Balanced class weights were also used so that errors in the smaller optimal and sub-standard classes received greater importance during training.
+Balanced class weights were also used so that errors in the smaller optimal and sub-standard classes received greater importance during training.
 
 The delta model outputs a probability for each performance class:
 
-$$
+```math
 p_{\Delta}(c)
 =
-P(Y=c \mid \Delta_1,\Delta_2)
-$$
+P\left(
+Y=c
+\mid
+\Delta_1,\Delta_2
+\right)
+```
 
-Delta recording was introduced after Session 5. Consequently, the delta model could use only the **169 eligible laps** with two complete measurements, rather than all 197 laps available to the CNN.
+**Delta recording was introduced after Session 5.** Consequently, the delta model could use only the **169 eligible laps** with two complete measurements, rather than all 197 laps available to the CNN.
 
-## 4.4. Fusion Model
+## 4.4 Fusion Model
 
 The CNN and logistic regression model represent different aspects of the lap:
 
@@ -405,50 +398,49 @@ Combining their probabilities was investigated because the two models may contai
 
 Three fusion strategies were compared:
 
-1. weighted arithmetic fusion;
-2. weighted geometric fusion; and
-3. confidence-gated fusion.
+1. weighted arithmetic fusion; and
+2. weighted geometric fusion;
 
-### Arithmetic Fusion
+### 4.4.1 Arithmetic Fusion
 
 Arithmetic fusion calculates a weighted average of the model probabilities:
 
-$$
+```math
 p_{\mathrm{fused}}(c)
 =
 w_{\mathrm{CNN}}p_{\mathrm{CNN}}(c)
 +
 w_{\Delta}p_{\Delta}(c)
-$$
+```
 
 where:
 
-$$
-w_{\mathrm{CNN}}+w_{\Delta}=1
-$$
+```math
+w_{\mathrm{CNN}} + w_{\Delta} = 1
+```
 
-### Geometric Fusion
+### 4.4.2 Geometric Fusion
 
 Geometric fusion combines the probabilities multiplicatively:
 
-$$
+```math
 p_{\mathrm{fused}}(c)
 \propto
 p_{\mathrm{CNN}}(c)^{w_{\mathrm{CNN}}}
 p_{\Delta}(c)^{w_{\Delta}}
-$$
+```
 
 This method penalises a class when either model assigns it a very low probability and therefore favours classes that receive support from both sources.
 
 The calculation was performed in log space for numerical stability:
 
-$$
+```math
 \log p_{\mathrm{fused}}(c)
 =
 w_{\mathrm{CNN}}\log p_{\mathrm{CNN}}(c)
 +
 w_{\Delta}\log p_{\Delta}(c)
-$$
+```
 
 CNN weights from 0.00 to 1.00 were evaluated on the validation set in increments of 0.01.
 
@@ -462,69 +454,131 @@ Geometric fusion produced the strongest validation result and was therefore lock
 
 ![Final modelling pipeline](Data/readme-images/final-model-pipeline.svg)
 
-# 5. Results
+# 5 Results
 
-## 5.1. Validation-Based Model Selection
+## 5.1 Validation-Based Model Selection
 
-Briefly show:
+Four ResNet18 fine-tuning strategies were compared using the fixed validation set:
 
-- the four CNN configurations;
-- the selected last-block checkpoint;
-- validation fusion accuracy of 70.37%;
-- validation fusion balanced accuracy of 70.70%;
-- selected weights of 0.37 and 0.63.
+| CNN configuration | Standalone CNN accuracy | Standalone CNN balanced accuracy | Best fused accuracy | Best fused balanced accuracy |
+|---|---:|---:|---:|---:|
+| Fully fine-tuned | 51.85% | 51.28% | 66.67% | 70.33% |
+| Frozen backbone | 48.15% | 59.71% | 59.26% | 65.20% |
+| Entire final residual layer trainable | 55.56% | 53.85% | 66.67% | 68.13% |
+| Final residual block trainable | 51.85% | 53.48% | **70.37%** | **70.70%** |
+
+Although the final-block CNN was not the strongest standalone CNN on the validation set, it produced the strongest result when combined with the delta logistic regression model.
+
+The selected pipeline used:
+
+- the ResNet18 checkpoint with only the final residual block and classification layer trainable;
+- the mean probability from the two throttle screenshots;
+- the delta logistic regression probabilities;
+- geometric probability fusion;
+- a CNN weight of **0.37**; and
+- a delta-model weight of **0.63**.
+
+This configuration correctly classified **19 of the 27 validation laps**, producing:
+
+- **70.37% accuracy**
+- **70.70% balanced accuracy**
+
+The checkpoint, aggregation method, fusion strategy and weights were fixed before the test set was evaluated.
 
 ## 5.2. Fixed Test Evaluation
+
+The selected pipeline was evaluated on the fixed test set containing **31 laps** from Sessions 6, 7, 8 and 25.
 
 | Model | Accuracy | Balanced accuracy |
 |---|---:|---:|
 | Majority baseline | 48.39% | 33.33% |
 | Throttle-only CNN | **58.06%** | **61.39%** |
 | Delta logistic regression | 41.94% | 42.50% |
-| Geometric fusion | 51.61% | 55.00% |
+| CNN + delta geometric fusion | 51.61% | 55.00% |
 
-State clearly that the CNN was strongest on the untouched test set and that fusion was weakened by poor delta-model generalisation.
+The throttle-only CNN was the strongest model on the fixed test set.
 
-Do not retune the fusion weights in response to this result.
+The fused model had performed best during validation but did not outperform the CNN on the test sessions. The delta logistic regression model generalised poorly to these sessions, and because the final fusion assigned a weight of 0.63 to the delta probabilities, several inaccurate delta predictions weakened the stronger CNN predictions.
+
+The fusion model correctly classified:
+
+- **6 of 8 optimal laps**
+- **6 of 15 standard laps**
+- **4 of 8 sub-standard laps**
+
+The standard class was the most difficult to distinguish, with predictions spread across all three classes. This is reasonable because the standard class occupies the middle of the Sector 1 time distribution and borders both the optimal and sub-standard classes.
 
 ## 5.3. Leave-One-Session-Out Robustness Analysis
 
+A leave-one-session-out analysis was conducted to examine whether the results depended too heavily on the original train, validation and test split.
+
+Each of Sessions 6–25 was held out once. For every fold:
+
+1. the CNN was trained using all other eligible sessions;
+2. the delta model was fitted using the remaining sessions with complete delta measurements;
+3. predictions were generated for the held-out session; and
+4. the previously selected fusion weights of 0.37 and 0.63 were applied.
+
+This produced out-of-fold predictions for **169 laps across 20 held-out sessions**.
+
 | Model | Accuracy | Balanced accuracy |
 |---|---:|---:|
-| Majority baseline | 50.30% | 33.33% |
+| Fold-specific majority baseline | 50.30% | 33.33% |
 | Throttle-only CNN | 62.72% | 58.79% |
 | Delta logistic regression | 53.85% | 60.05% |
-| Geometric fusion | **63.91%** | **66.41%** |
+| CNN + delta geometric fusion | **63.91%** | **66.41%** |
 
-Explain that fusion was strongest across the broader 20-session robustness analysis, but that LOSO was post-hoc rather than a second untouched test.
+Across the pooled leave-one-session-out predictions, geometric fusion achieved the strongest overall performance.
 
-# 6. Limitations
+The fused model correctly classified:
 
-## 6.1. Dataset Size and Scope
+- **31 of 49 optimal laps**
+- **50 of 85 standard laps**
+- **27 of 35 sub-standard laps**
+
+This corresponds to class recalls of approximately:
+
+- **63.27% for optimal**
+- **58.82% for standard**
+- **77.14% for sub-standard**
+
+The fusion model also produced the highest mean session accuracy and the lowest session-to-session variation:
+
+| Model | Mean session accuracy | Session accuracy standard deviation |
+|---|---:|---:|
+| Throttle-only CNN | 63.86% | 18.87% |
+| Delta logistic regression | 58.16% | 22.58% |
+| CNN + delta geometric fusion | **64.85%** | **16.81%** |
+
+The fixed test and leave-one-session-out results provide different conclusions. The standalone CNN was strongest on the original fixed test set, while fusion was strongest across the broader set of held-out sessions.
+
+# 6 Limitations
+
+## 6.1 Dataset Size and Scope
 
 The final eligible dataset contains 197 laps, of which 169 have complete delta measurements. This is a small dataset for fine-tuning a convolutional neural network.
 
-All laps were recorded by one driver on Sector 1 of one circuit. The results therefore cannot be assumed to generalise to other drivers, circuits, sectors or game settings.
+All laps were recorded by myself on Sector 1 of one circuit. The results therefore cannot be assumed to generalise to other drivers, circuits, sectors or game settings.
 
-## 6.2. Unequal Session Composition
+## 6.2 Unequal Session Composition
 
 Recording sessions contain different numbers of eligible laps, and several sessions do not contain examples from all three classes.
 
 This makes some session-level metrics more variable. In particular, balanced accuracy calculated for a session missing one or more classes is not directly comparable with the balanced accuracy of a session containing all three classes.
 
-## 6.3. Visual Differences Between Sessions
+## 6.3 Visual Differences Between Sessions
 
 From Session 20 onward, trackside wall sponsorship changed from Louis Vuitton branding to Qatar Airways branding.
 
 Although the track geometry remained unchanged, the difference in background colour and appearance may provide the CNN with a session-related visual cue that is unrelated to driving performance.
 
-## 6.4. Quantile-Based Labels
+## 6.4 Quantile-Based Labels
 
-The three classes contain approximately equal-frequency performance regions, but the time intervals represented by those classes are not equal in width.
+The three classes contain approximately equal-frequency performance regions, but **the time intervals represented by those classes are not equal in width**.
 
 The difference between a standard and sub-standard lap may therefore be larger than the difference between an optimal and standard lap. Laps positioned immediately on opposite sides of a quartile boundary may also have nearly identical Sector 1 times despite receiving different labels.
 
-## 6.5. Unrecorded Driving Factors
+## 6.5 Unrecorded Driving Factors
 
 Braking position, throttle position and brake–throttle timing do not fully determine Sector 1 performance.
 
@@ -541,36 +595,22 @@ Other relevant variables may include:
 
 Variation in these unrecorded factors may explain why similar screenshots or deltas sometimes produced different Sector 1 times.
 
-## 6.6. Limited Telemetry Availability
+## 6.6 Limited Telemetry Availability
 
-The available telemetry source provided sector times but did not supply every potentially useful signal in a convenient form.
+The available telemetry provided sector times but did not supply every potentially useful signal in a convenient form.
 
 Continuous spatial coordinates, steering input, vehicle speed and pedal-pressure measurements may have provided a more direct representation of driving behaviour than screenshots alone.
 
-## 6.7. Missing Delta Measurements
+## 6.7 Missing Delta Measurements
 
 Brake–throttle delta recording began after Session 5. The CNN could therefore use all 197 eligible laps, while the delta and fusion models were restricted to 169 laps.
 
-## 6.8. Evaluation Status
-
-The fixed test set was not used during model selection and remains the primary final evaluation.
-
-The leave-one-session-out analysis was conducted after the broader modelling approach had already been developed. It provides useful robustness evidence but should be treated as a post-hoc analysis rather than a second untouched test.
-
-
-- SESSION 20 onwards, the sponsors on the wall are from qatar airways not louis vuitton, so there is a stark difference in colour but that is the extent of the difference.
-- All sessions do not have the same amount of laps.
-- All sessions do not have all classes of laps.
-- The difference between the sub-standard and standard lap may be more than the difference between an optimal and a standard lap.
-- Sample size is not large enough due to the nature of data collection.
-- There might be other reasons as to why the sector times were not fast consistent which do not rely on braking, acceleration, and the time between the both. One of them could be related to the movement of the steering wheel.
-- Perhaps mention that not all kinds of telemetry data was avalaible to be extracted, otherwise geospatial lap data might have been more useful than visual data. Also the extent at which the pedals are pressed could have been useful.
-
 # 7 Reproducibility
+todo
 
-# 8 Miscellaneous
+# 8 Repository Guide
 
-## 8.1 Repository File Structure 
+## 8.1 Repository Structure 
 
 ```bash
 root
@@ -611,6 +651,53 @@ root
 ├── Models
 └── README.md
 ```
-## 8.2 Data Examples
+## 8.2 Example Model Inputs
 
-Maybe add the images the cnn sees etc.
+Each eligible lap contains four screenshots captured during Sector 1:
+
+1. the first braking input;
+2. the first throttle input;
+3. the second braking input; and
+4. the second throttle input.
+
+The following images show the four screenshots associated with one representative eligible lap.
+
+<table>
+  <tr>
+    <th>Brake Input 1</th>
+    <th>Throttle Input 1</th>
+  </tr>
+  <tr>
+    <td>
+      <img src="Data/readme-images/example-brake-1.png" width="420">
+    </td>
+    <td>
+      <img src="Data/readme-images/example-throttle-1.png" width="420">
+    </td>
+  </tr>
+  <tr>
+    <th>Brake Input 2</th>
+    <th>Throttle Input 2</th>
+  </tr>
+  <tr>
+    <td>
+      <img src="Data/readme-images/example-brake-2.png" width="420">
+    </td>
+    <td>
+      <img src="Data/readme-images/example-throttle-2.png" width="420">
+    </td>
+  </tr>
+</table>
+
+The following table shows the numerical data associated with the final lap recorded.
+
+| Example attribute | Value |
+|---|---:|
+| Sector 1 time | 28.092 s |
+| Assigned class | Optimal |
+| First brake–throttle delta | 1.560410499572754 s |
+| Second brake–throttle delta | 2.179224967956543 s |
+
+Although all four screenshots were available during model development, validation experiments found that averaging the predictions from the two throttle screenshots produced the strongest lap-level CNN performance. The final image model therefore uses only the two throttle images when generating a prediction for a lap.
+
+The screenshots do not directly display the brake–throttle delta measurements. Those values were recorded separately by the controller-input collection script and supplied to the logistic regression model as numerical features.
