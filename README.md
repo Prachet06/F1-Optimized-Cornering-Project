@@ -58,7 +58,7 @@ The script automatically creates a new session directory each time data collecti
   </tr>
   <tr>
     <td>
-      <img src="Data/readme-images/button-guide-1.png" width="650">
+      <img src="Data/readme-images/button-guide-1.PNG" width="650">
     </td>
   </tr>
   <tr>
@@ -66,7 +66,7 @@ The script automatically creates a new session directory each time data collecti
   </tr>
   <tr>
     <td>
-      <img src="Data/readme-images/button-guide-2.png" width="650">
+      <img src="Data/readme-images/button-guide-2.PNG" width="650">
     </td>
   </tr>
 </table>
