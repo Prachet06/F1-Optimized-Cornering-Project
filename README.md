@@ -55,14 +55,18 @@ The script automatically creates a new session directory each time data collecti
 <table>
   <tr>
     <th>Controller Guide 1</th>
+  </tr>
+  <tr>
+    <td>
+      <img src="Data/readme-images/button-guide-1.png" width="650">
+    </td>
+  </tr>
+  <tr>
     <th>Controller Guide 2</th>
   </tr>
   <tr>
     <td>
-      <img src="Data/readme-images/button-guide-1.PNG" width="420">
-    </td>
-    <td>
-      <img src="Data/readme-images/button-guide-2.PNG" width="420">
+      <img src="Data/readme-images/button-guide-2.png" width="650">
     </td>
   </tr>
 </table>
