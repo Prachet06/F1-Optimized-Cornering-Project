@@ -189,6 +189,11 @@ These rules are specific to the dataset and collection method used in this proje
 
 The eligibility rules reduced the dataset from **255 recorded laps to 197 eligible laps**.
 
+![Sector 1 times for eligible laps](Data/readme-images/s1_eligible_times.png)
+
+> Sector 1 times for the 197 eligible laps in recording order. Times generally decrease during the earlier portion of data collection, suggesting improved familiarity with the circuit, before becoming more stable across the later laps. Considerable lap-to-lap variation remains, indicating that performance did not become completely consistent.
+
+
 The table below shows the filtering process in the order in which the rules were applied:
 
 | Filtering stage | Laps removed at this stage | Laps remaining |
@@ -218,6 +223,10 @@ The first and third quartiles were:
 
 - **First quartile (Q1): 28,103 ms**
 - **Third quartile (Q3): 28,569 ms**
+
+![Sector 1 times and assigned performance classes](Data/readme-images/s1_assigned-class.png)
+
+> Performance classes assigned to the 197 eligible laps using the first and third quartiles of Sector 1 time. The figure shows that observations immediately on opposite sides of a threshold can have very similar sector times despite receiving different class labels.
 
 The following rules were then applied:
 
