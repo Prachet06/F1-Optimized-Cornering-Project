@@ -310,7 +310,7 @@ Transfer learning was used because the project contains only 788 eligible images
 
 ![ResNet18 fine-tuning configuration](Data/readme-images/simplified-cnn-architecture.png)
 
-> The diagram above shows the sections of ResNet18 that were frozen and fine-tuned in the selected configuration.
+> This simplified architecture diagram above shows the sections of ResNet18 that were frozen and fine-tuned in the selected configuration.
 
 ### 4.2.1 Fine-Tuning Experiments
 
@@ -366,8 +366,6 @@ p_{\mathrm{throttle\ 2}}(c)
 This result implies that throttle screenshots either contained more useful information about Sector 1 performance or were represented more consistently across laps.
 
 It does not prove that braking position is unimportant. It only shows that the trained CNN extracted more reliable validation predictions from the throttle screenshots in this dataset.
-
-![CNN aggregation comparison](Data/readme-images/cnn-aggregation-comparison.png)
 
 ## 4.3 Delta Logistic Regression Model
 
@@ -469,9 +467,9 @@ The selected final configuration used:
 
 Geometric fusion produced the strongest validation result and was therefore locked before the final test evaluation.
 
-![Final modelling pipeline](Data/readme-images/final-model-pipeline.svg)
-
 # 5 Results
+![Sector 1 performance classification pipeline](Data/readme-images/classification_pipeline.png)
+*End-to-end application of the final classification pipeline. Two throttle screenshots are processed by the ResNet18 CNN, while two brake–throttle timing measurements are processed by a standardised logistic regression model. Their class probabilities are combined using weighted geometric fusion to predict the lap's relative Sector 1 performance class. The displayed delta values are illustrative.*
 
 ## 5.1 Validation-Based Model Selection
 
@@ -622,12 +620,9 @@ Continuous spatial coordinates, steering input, vehicle speed and pedal-pressure
 
 Brake–throttle delta recording began after Session 5. The CNN could therefore use all 197 eligible laps, while the delta and fusion models were restricted to 169 laps.
 
-# 7 Reproducibility
-todo
+# 7 Repository Guide
 
-# 8 Repository Guide
-
-## 8.1 Repository Structure 
+## 7.1 Repository Structure 
 
 ```bash
 root
@@ -637,10 +632,9 @@ root
 │   │   ├── final_modelling.ipynb
 │   │   ├── rebuild_manifests_and_splits.ipynb
 │   │   └── sector_time_extraction.ipynb
-│   ├── scripts
-│   │   ├── collect_screenshots_and_deltas.py
-│   │   └── collate_session_data.py
-│   └── README.md
+│   └── scripts
+│       ├── collect_screenshots_and_deltas.py
+│       └── collate_session_data.py
 ├── Data
 │   ├── brake-throttle-delta-data
 │   ├── collated-data
@@ -663,12 +657,11 @@ root
 │   │   ├── loso
 │   │   ├── test
 │   │   ├── validation
-│   ├── sector-time-data
-│   └── README.md
+│   └── sector-time-data
 ├── Models
 └── README.md
 ```
-## 8.2 Example Model Inputs
+## 7.2 Example Model Inputs
 
 Each eligible lap contains four screenshots captured during Sector 1:
 
@@ -708,7 +701,7 @@ The following images show the four screenshots associated with one representativ
 
 Although all four screenshots were available during model development, validation experiments found that averaging the predictions from the two throttle screenshots produced the strongest lap-level CNN performance. The final image model therefore uses only the two throttle images when generating a prediction for a lap.
 
-The screenshots do not directly display the brake–throttle delta measurements. Those values were recorded separately by the controller-input collection script and supplied to the logistic regression model as numerical features.The following table shows the numerical data associated with the final lap recorded.
+The screenshots do not directly display the brake–throttle delta measurements. Those values were recorded separately by the controller-input collection script and supplied to the logistic regression model as numerical features. The following table shows the numerical data associated with the final lap recorded.
 
 | Example attribute | Value |
 |---|---:|
