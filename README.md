@@ -224,7 +224,7 @@ The first and third quartiles were:
 - **First quartile (Q1): 28,103 ms**
 - **Third quartile (Q3): 28,569 ms**
 
-![Sector 1 times and assigned performance classes](Data/readme-images/s1_assigned-class.png)
+![Sector 1 times and assigned performance classes](Data/readme-images/s1_assigned_class.png)
 
 > Performance classes assigned to the 197 eligible laps using the first and third quartiles of Sector 1 time. The figure shows that observations immediately on opposite sides of a threshold can have very similar sector times despite receiving different class labels.
 
